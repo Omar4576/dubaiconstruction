@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — BNAIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { overflow-x: hidden; }
+
+    /* HERO */
+    .pricing-hero {
+      padding: 100px 48px 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pricing-hero h1 { font-size: clamp(36px,5vw,64px); letter-spacing: -2px; margin-bottom: 18px; }
+    .pricing-hero p { font-size: 18px; color: var(--text-muted); max-width: 500px; margin: 0 auto 40px; }
+
+    .billing-toggle {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 4px;
+      gap: 0;
+      margin-bottom: 64px;
+    }
+    .toggle-opt {
+      padding: 8px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .toggle-opt.active { background: var(--gold); color: #0A0A0B; font-weight: 700; }
+    .save-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: rgba(82,192,122,0.15);
+      border: 1px solid rgba(82,192,122,0.3);
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 100px;
+      margin-left: 8px;
+    }
+
+    /* PLANS GRID */
+    .plans-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 32px 28px;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .plan-card:hover { transform: translateY(-4px); }
+    .plan-card.featured {
+      border-color: var(--gold-border);
+      background: linear-gradient(160deg, rgba(201,168,76,0.08) 0%, var(--surface) 60%);
+      transform: scale(1.04);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+    }
+    .plan-card.featured:hover { transform: scale(1.04) translateY(-4px); }
+
+    .plan-popular {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: #0A0A0B;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .plan-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+
+    .plan-price {
+      margin-bottom: 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .price-currency { font-size: 18px; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
+    .price-amount {
+      font-family: 'Syne', sans-serif;
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+    .price-period { font-size: 13px; color: var(--text-muted); align-self: flex-end; }
+    .price-annual { font-size: 12px; color: var(--green); margin-bottom: 24px; height: 18px; }
+
+    .plan-divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    .plan-features { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .feature-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .feature-text { color: var(--text-sub); }
+
+    .plan-limits {
+      background: var(--bg3);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 20px;
+    }
+    .limit-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+    .limit-label { color: var(--text-muted); }
+    .limit-val { font-weight: 600; }
+
+    /* FAQ */
+    .faq-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+    .faq-title { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 40px; }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      gap: 12px;
+    }
+    .faq-arrow { font-size: 18px; color: var(--gold); transition: transform 0.25s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.2s;
+      padding: 0 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 20px 18px; }
+
+    /* PAYMENT MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      width: 100%; max-width: 520px;
+      padding: 40px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.25s;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text-muted); width: 32px; height: 32px;
+      border-radius: 6px; cursor: pointer; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .modal-close:hover { color: var(--text); }
+
+    .pay-plan-summary {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pay-plan-name { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; }
+    .pay-plan-price { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--gold); }
+
+    .card-input-row {
+      display: grid;
+      grid-template-columns: 1fr 80px 80px;
+      gap: 10px;
+    }
+
+    .card-icons { display: flex; gap: 8px; margin-bottom: 16px; }
+    .card-icon {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 4px 10px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .secure-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 14px;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .success-pay {
+      text-align: center;
+      padding: 20px 0;
+      display: none;
+    }
+    .success-pay .big-icon { font-size: 64px; margin-bottom: 16px; }
+    .success-pay h2 { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    .success-pay p { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+
+    @media (max-width: 900px) {
+      .plans-grid { grid-template-columns: 1fr; }
+      .plan-card.featured { transform: none; }
+      .pricing-hero { padding: 80px 20px 40px; }
+      .plans-wrap { padding: 0 20px 60px; }
+      .faq-section { padding: 0 20px 60px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="logo">BNA<span>IQ</span></a>
+  <div style="display:flex;gap:10px;">
+    <a href="index.html" class="btn btn-ghost btn-sm">← Home</a>
+    <a href="dashboard.html" class="btn btn-gold btn-sm">Dashboard</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="pricing-hero">
+  <div class="section-label">Pricing</div>
+  <h1>Simple plans for every<br><span style="color:var(--gold)">company size</span></h1>
+  <p>From solo contractors to enterprise firms. No hidden fees. Cancel anytime.</p>
+
+  <div class="billing-toggle">
+    <button class="toggle-opt active" id="monthlyBtn" onclick="setBilling('monthly')">Monthly</button>
+    <button class="toggle-opt" id="annualBtn" onclick="setBilling('annual')">
+      Annual <span class="save-badge">Save 20%</span>
+    </button>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-wrap">
+  <div class="plans-grid" id="plansGrid"></div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-title">Questions & Answers</div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>Is my payment information secure?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Yes. All payments are processed through our PCI-DSS compliant payment gateway. Card details are never stored on our servers — only a tokenized reference. We use TLS 1.3 for all transactions.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>Can I change my plan at any time?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Yes. You can upgrade or downgrade your plan at any time from your dashboard. When upgrading, you'll be charged the prorated difference immediately. When downgrading, the change takes effect at the end of your billing period.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>What does "RTA Verified" mean?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">RTA Verified means your company's trade license and credentials have been manually checked against Dubai Municipality and RTA records by our compliance team. This badge is displayed prominently on your public profile and signals trust to potential clients. Verification takes up to 48 hours.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>What is the Investor Progress Tracker?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Pro and Enterprise subscribers can share a live building/project progress page with their investors and clients. This shows floor-by-floor completion, milestone tracking, budget spend, and latest site updates in real time — without giving access to your internal dashboard.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>Do you offer a free trial?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Pro plan comes with a 14-day free trial — no card required. Enterprise plans can be demoed on request with a dedicated account manager. Basic (free) tier is always free with no time limit.</div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span>Is pricing in AED?</span><span class="faq-arrow">+</span>
+    </button>
+    <div class="faq-a">Yes. All pricing is in UAE Dirhams (AED). For Enterprise international billing, we also support USD and GBP. VAT (5%) is added at checkout as per UAE VAT regulations.</div>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closePayModal()">✕</button>
+
+    <div id="payForm">
+      <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;">Complete Your Subscription</h2>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">You're upgrading to the plan below. Cancel any time.</p>
+
+      <div class="pay-plan-summary">
+        <div>
+          <div class="pay-plan-name" id="modalPlanName">Pro</div>
+          <div style="font-size:13px;color:var(--text-muted);" id="modalBillingDesc">Billed monthly</div>
+        </div>
+        <div class="pay-plan-price" id="modalPlanPrice">AED 499</div>
+      </div>
+
+      <div class="alert alert-error" id="payError"></div>
+
+      <div class="form-group">
+        <label>Cardholder Name</label>
+        <input type="text" id="payName" placeholder="Omar Aliyev" />
+      </div>
+
+      <div class="form-group">
+        <label>Card Number</label>
+        <div class="card-icons">
+          <span class="card-icon">VISA</span>
+          <span class="card-icon">MC</span>
+          <span class="card-icon">AMEX</span>
+        </div>
+        <input type="text" id="payCard" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)" />
+      </div>
+
+      <div class="card-input-row">
+        <div class="form-group">
+          <label>Expiry</label>
+          <input type="text" id="payExpiry" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="payCvv" placeholder="•••" maxlength="4" oninput="this.value=this.value.replace(/\D/g,'')" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Billing Email</label>
+        <input type="email" id="payEmail" placeholder="finance@company.com" />
+      </div>
+
+      <div class="form-group">
+        <label>Company Name (for invoice)</label>
+        <input type="text" id="payCompany" placeholder="Al Fardan Construction LLC" />
+      </div>
+
+      <button class="btn btn-gold" style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-top:6px;" onclick="submitPayment()">
+        🔒 Pay Now
+      </button>
+
+      <div class="secure-note">
+        🔐 256-bit SSL encrypted · PCI-DSS compliant · No card stored
+      </div>
+
+      <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:12px;">By subscribing you agree to BNAIQ's Terms of Service. VAT (5%) will be added at checkout.</p>
+    </div>
+
+    <div class="success-pay" id="paySuccess">
+      <div class="big-icon">🎉</div>
+      <h2>You're subscribed!</h2>
+      <p>Your <strong id="successPlan"></strong> plan is now active. Your RTA verification request has been submitted automatically. You'll receive a confirmation email shortly.</p>
+      <a href="dashboard.html" class="btn btn-gold btn-lg">Go to Dashboard →</a>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+let billing = 'monthly';
+let selectedPlan = null;
+
+const PLAN_DESCS = {
+  free: 'For solo contractors and new businesses getting started.',
+  pro: 'Best for growing contractors with multiple active projects.',
+  enterprise: 'For large firms with government contracts and complex needs.',
+};
+
+function setBilling(mode) {
+  billing = mode;
+  document.getElementById('monthlyBtn').classList.toggle('active', mode === 'monthly');
+  document.getElementById('annualBtn').classList.toggle('active', mode === 'annual');
+  renderPlans();
+}
+
+function getPrice(plan) {
+  if (plan.price === 0) return 0;
+  return billing === 'annual' ? Math.round(plan.price * 0.8) : plan.price;
+}
+
+function renderPlans() {
+  const grid = document.getElementById('plansGrid');
+  grid.innerHTML = BNAIQ.PLANS.map(plan => {
+    const price = getPrice(plan);
+    const isFeatured = plan.id === 'pro';
+    const annualNote = billing === 'annual' && plan.price > 0
+      ? `Save AED ${(plan.price - price) * 12}/yr`
+      : '&nbsp;';
+
+    return `
+      <div class="plan-card ${isFeatured ? 'featured' : ''}">
+        ${plan.badge ? `<div class="plan-popular">${plan.badge}</div>` : ''}
+
+        <div class="plan-name">${plan.name}</div>
+        <div class="plan-desc">${PLAN_DESCS[plan.id]}</div>
+
+        <div class="plan-price">
+          ${price > 0 ? `<span class="price-currency">AED</span>` : ''}
+          <span class="price-amount">${price === 0 ? 'Free' : price.toLocaleString()}</span>
+          ${price > 0 ? `<span class="price-period">/ mo</span>` : ''}
+        </div>
+        <div class="price-annual" style="color:var(--green);font-size:12px;">${annualNote}</div>
+
+        <button class="btn ${isFeatured ? 'btn-gold' : 'btn-outline-gold'}" style="width:100%;justify-content:center;padding:12px;font-size:14px;margin-bottom:20px;"
+          onclick="${plan.id === 'free' ? "window.location='index.html'" : plan.id === 'enterprise' ? "alert('Contact sales@bnaiq.ae for Enterprise pricing')" : `openPayModal('${plan.id}')`}">
+          ${plan.cta}
+        </button>
+
+        <div class="plan-limits">
+          <div class="limit-row"><span class="limit-label">Active Projects</span><span class="limit-val">${plan.limits.projects === Infinity ? 'Unlimited' : plan.limits.projects}</span></div>
+          <div class="limit-row"><span class="limit-label">Blueprint Storage</span><span class="limit-val">${plan.limits.blueprints === Infinity ? 'Unlimited' : plan.limits.blueprints + ' files'}</span></div>
+          <div class="limit-row"><span class="limit-label">Team Members</span><span class="limit-val">${plan.limits.teamMembers === Infinity ? 'Unlimited' : plan.limits.teamMembers}</span></div>
+        </div>
+
+        <div class="plan-divider"></div>
+
+        <div class="plan-features">
+          ${plan.features.map(f => `
+            <div class="feature-item">
+              <span class="feature-icon" style="color:${isFeatured ? 'var(--gold)' : 'var(--green)'}">✓</span>
+              <span class="feature-text">${f}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openPayModal(planId) {
+  selectedPlan = BNAIQ.PLANS.find(p => p.id === planId);
+  if (!selectedPlan) return;
+  const price = getPrice(selectedPlan);
+  document.getElementById('modalPlanName').textContent = selectedPlan.name + ' Plan';
+  document.getElementById('modalPlanPrice').textContent = `AED ${price.toLocaleString()}`;
+  document.getElementById('modalBillingDesc').textContent = billing === 'annual' ? 'Billed annually (20% off)' : 'Billed monthly';
+  document.getElementById('payForm').style.display = 'block';
+  document.getElementById('paySuccess').style.display = 'none';
+  document.getElementById('payModal').classList.add('open');
+  // Pre-fill email from session
+  const sess = sessionStorage.getItem('bnaiq_session');
+  if (sess) document.getElementById('payEmail').value = JSON.parse(sess).email || '';
+}
+
+function closePayModal() { document.getElementById('payModal').classList.remove('open'); }
+document.getElementById('payModal').addEventListener('click', e => { if (e.target === document.getElementById('payModal')) closePayModal(); });
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExpiry(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,4);
+  if (v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2);
+  el.value = v;
+}
+
+function showPayError(msg) {
+  const el = document.getElementById('payError');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+function submitPayment() {
+  const name = document.getElementById('payName').value.trim();
+  const card = document.getElementById('payCard').value.replace(/\s/g,'');
+  const expiry = document.getElementById('payExpiry').value;
+  const cvv = document.getElementById('payCvv').value;
+  const email = document.getElementById('payEmail').value.trim();
+
+  if (!name) return showPayError('Please enter the cardholder name.');
+  if (card.length < 16) return showPayError('Please enter a valid 16-digit card number.');
+  if (expiry.length < 4) return showPayError('Please enter a valid expiry date.');
+  if (cvv.length < 3) return showPayError('Please enter your CVV.');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showPayError('Please enter a valid email address.');
+
+  // Demo: simulate payment processing
+  const btn = document.querySelector('#payForm .btn-gold');
+  btn.textContent = '⏳ Processing...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Save plan to session
+    const sess = sessionStorage.getItem('bnaiq_session');
+    if (sess) {
+      const s = JSON.parse(sess);
+      s.plan = selectedPlan.id;
+      sessionStorage.setItem('bnaiq_session', JSON.stringify(s));
+    }
+    document.getElementById('payForm').style.display = 'none';
+    document.getElementById('paySuccess').style.display = 'block';
+    document.getElementById('successPlan').textContent = selectedPlan.name;
+    btn.textContent = '🔒 Pay Now';
+    btn.disabled = false;
+  }, 2200);
+}
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+document.addEventListener('DOMContentLoaded', renderPlans);
+</script>
+</body>
+</html>

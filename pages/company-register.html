@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Your Company — BNAIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C9A84C; --gold-light: #E8C97A; --gold-dim: rgba(201,168,76,0.15);
+      --bg: #0A0A0B; --bg2: #111114; --bg3: #18181D; --surface: #1E1E25;
+      --border: rgba(255,255,255,0.07); --text: #F0EDE6; --text-muted: #8A8880;
+      --red: #E05252; --green: #52C07A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 48px; border-bottom: 1px solid var(--border); background: var(--bg2); }
+    .logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; text-decoration: none; color: var(--text); }
+    .logo span { color: var(--gold); }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; text-decoration: none; }
+    .btn-gold { background: var(--gold); color: #0A0A0B; font-weight: 600; }
+    .btn-gold:hover { background: var(--gold-light); }
+    .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text-muted); }
+
+    .page-wrap { display: grid; grid-template-columns: 1fr 480px; min-height: calc(100vh - 65px); }
+
+    /* LEFT PANEL */
+    .left-panel {
+      padding: 64px 56px;
+      background: linear-gradient(160deg, var(--bg2), var(--bg3));
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .panel-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.3); border-radius: 100px; font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 28px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 20px; }
+    h1 em { font-style: normal; color: var(--gold); }
+    .panel-desc { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 48px; max-width: 440px; }
+
+    .benefit-list { display: flex; flex-direction: column; gap: 16px; }
+    .benefit-item { display: flex; align-items: flex-start; gap: 14px; }
+    .benefit-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--gold-dim); border: 1px solid rgba(201,168,76,0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .benefit-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .benefit-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+    /* RIGHT PANEL */
+    .right-panel { padding: 48px 40px; background: var(--bg); overflow-y: auto; }
+    .form-header { margin-bottom: 32px; }
+    .form-header h2 { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    .form-header p { font-size: 14px; color: var(--text-muted); }
+
+    /* STEP PROGRESS */
+    .step-progress { display: flex; gap: 0; margin-bottom: 36px; }
+    .step-item { flex: 1; display: flex; align-items: center; gap: 0; }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; font-family: 'Syne', sans-serif; flex-shrink: 0; background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); transition: all 0.3s; }
+    .step-num.active { background: var(--gold); color: #0A0A0B; border-color: var(--gold); }
+    .step-num.done { background: var(--green); color: #0A0A0B; border-color: var(--green); }
+    .step-line { flex: 1; height: 1px; background: var(--border); }
+    .step-label { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus { border-color: rgba(201,168,76,0.5); }
+    .form-group select option { background: var(--bg2); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-full { grid-column: span 2; }
+
+    .upload-zone { border: 2px dashed var(--border); border-radius: 10px; padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 16px; }
+    .upload-zone:hover { border-color: rgba(201,168,76,0.4); background: var(--gold-dim); }
+    .upload-zone .uz-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-zone p { font-size: 13px; color: var(--text-muted); }
+    .upload-zone strong { color: var(--gold); }
+
+    .btn-row { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-row .btn { flex: 1; justify-content: center; padding: 13px; font-size: 15px; }
+
+    .alert { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: none; }
+    .alert-success { background: rgba(82,192,122,0.12); border: 1px solid rgba(82,192,122,0.3); color: var(--green); }
+
+    .success-screen { text-align: center; padding: 40px 0; display: none; }
+    .success-icon { font-size: 64px; margin-bottom: 20px; }
+    .success-screen h2 { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .success-screen p { color: var(--text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 28px; }
+
+    @media (max-width: 900px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .left-panel { padding: 40px 24px; }
+      .right-panel { padding: 32px 20px; }
+      nav { padding: 16px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">BNA<span>IQ</span></a>
+  <a href="index.html" class="btn btn-ghost">← Back to Home</a>
+</nav>
+
+<div class="page-wrap">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="panel-badge">🏛️ RTA Partner Program</div>
+    <h1>List your company on <em>Dubai's</em> official build registry</h1>
+    <p class="panel-desc">
+      Get discovered by clients, government entities, and developers across the UAE. Join 340+ verified contractors on BNAIQ.
+    </p>
+    <div class="benefit-list">
+      <div class="benefit-item">
+        <div class="benefit-icon">✅</div>
+        <div>
+          <div class="benefit-title">Government-Level Verification</div>
+          <div class="benefit-desc">Your trade license and credentials are validated against Dubai Municipality and RTA records.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">📐</div>
+        <div>
+          <div class="benefit-title">Blueprint & Portfolio Vault</div>
+          <div class="benefit-desc">Upload and securely showcase project drawings, renders, BOQs, and completion certificates.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">📈</div>
+        <div>
+          <div class="benefit-title">Inbound Project Leads</div>
+          <div class="benefit-desc">Qualified clients submit project requests directly to your dashboard — no cold outreach needed.</div>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🔐</div>
+        <div>
+          <div class="benefit-title">Secure, Auditable Platform</div>
+          <div class="benefit-desc">All data is encrypted and audit-logged. Fully compliant with UAE data protection standards.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="form-header">
+      <h2>Register Your Company</h2>
+      <p>Takes about 5 minutes. Verification within 48 hours.</p>
+    </div>
+
+    <!-- STEPS INDICATOR -->
+    <div class="step-progress" id="stepProgress">
+      <div class="step-item">
+        <div class="step-num active" id="stepNum1">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" id="stepNum2">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="step-item">
+        <div class="step-num" id="stepNum3">3</div>
+        <div class="step-line" style="background:transparent"></div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Company Info -->
+    <div class="form-step active" id="step1">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="s1First" placeholder="Omar" />
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="s1Last" placeholder="Aliyev" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Company Name (as on trade license)</label>
+        <input type="text" id="s1Company" placeholder="Al Fardan Construction LLC" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Trade License Number</label>
+          <input type="text" id="s1License" placeholder="DM-CON-XXXX-XXX" />
+        </div>
+        <div class="form-group">
+          <label>Year Established</label>
+          <input type="number" id="s1Year" placeholder="2010" min="1970" max="2025" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Primary Speciality</label>
+        <select id="s1Type">
+          <option value="">— Select —</option>
+          <option>Commercial Construction</option>
+          <option>Residential Construction</option>
+          <option>Renovation & Fit-Out</option>
+          <option>Infrastructure & Civil</option>
+          <option>Interior Design</option>
+          <option>MEP Engineering</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="nextStep(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Account Credentials -->
+    <div class="form-step" id="step2">
+      <div class="form-group">
+        <label>Business Email</label>
+        <input type="email" id="s2Email" placeholder="contact@yourcompany.com" />
+      </div>
+      <div class="form-group">
+        <label>Phone Number (UAE)</label>
+        <input type="tel" id="s2Phone" placeholder="+971 4 XXX XXXX" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="s2Pass" placeholder="Min. 8 characters" />
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="s2Confirm" placeholder="••••••••" />
+      </div>
+      <div class="form-group">
+        <label>Company Bio (shown on public profile)</label>
+        <textarea id="s2Bio" placeholder="Briefly describe your company, expertise, and what makes you stand out..." style="min-height:80px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; padding:11px 14px; outline:none; width:100%;"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="prevStep(1)">← Back</button>
+        <button class="btn btn-gold" onclick="nextStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Documents -->
+    <div class="form-step" id="step3">
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px; line-height:1.6;">
+        Upload your trade license and any relevant certifications. These will be reviewed by our RTA compliance team within 48 hours.
+      </p>
+      <div class="upload-zone" onclick="alert('File upload connects to server storage in production.')">
+        <div class="uz-icon">📄</div>
+        <p><strong>Trade License (PDF)</strong></p>
+        <p>Required for verification</p>
+      </div>
+      <div class="upload-zone" onclick="alert('File upload connects to server storage in production.')">
+        <div class="uz-icon">🏛️</div>
+        <p><strong>ISO / Other Certifications</strong></p>
+        <p>Optional but recommended</p>
+      </div>
+      <div class="upload-zone" onclick="alert('File upload connects to server storage in production.')">
+        <div class="uz-icon">📐</div>
+        <p><strong>Portfolio / Project Photos</strong></p>
+        <p>JPG, PNG, PDF — up to 20MB each</p>
+      </div>
+
+      <div class="alert alert-success" id="regSuccess">✓ Registration complete! Redirecting to your dashboard...</div>
+
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-gold" onclick="submitRegistration()">Submit Registration</button>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">🎉</div>
+      <h2>You're registered!</h2>
+      <p>Your company profile has been submitted for RTA verification. You'll receive a confirmation email within 48 hours. Your dashboard is ready now.</p>
+      <a href="dashboard.html" class="btn btn-gold" style="display:inline-flex; justify-content:center; padding:14px 32px; font-size:15px;">Go to Dashboard →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentStep = 1;
+
+  function updateStepUI(step) {
+    for (let i = 1; i <= 3; i++) {
+      const num = document.getElementById('stepNum' + i);
+      if (i < step) { num.className = 'step-num done'; num.textContent = '✓'; }
+      else if (i === step) { num.className = 'step-num active'; num.textContent = i; }
+      else { num.className = 'step-num'; num.textContent = i; }
+    }
+  }
+
+  function nextStep(to) {
+    // Basic validation
+    if (to === 2) {
+      const first = document.getElementById('s1First').value.trim();
+      const company = document.getElementById('s1Company').value.trim();
+      const license = document.getElementById('s1License').value.trim();
+      const type = document.getElementById('s1Type').value;
+      if (!first || !company || !license || !type) return alert('Please fill in all required fields.');
+    }
+    if (to === 3) {
+      const email = document.getElementById('s2Email').value.trim();
+      const pass = document.getElementById('s2Pass').value;
+      const confirm = document.getElementById('s2Confirm').value;
+      if (!email || !pass) return alert('Please fill in all required fields.');
+      if (pass.length < 8) return alert('Password must be at least 8 characters.');
+      if (pass !== confirm) return alert('Passwords do not match.');
+    }
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + to).classList.add('active');
+    currentStep = to;
+    updateStepUI(to);
+  }
+
+  function prevStep(to) {
+    document.getElementById('step' + currentStep).classList.remove('active');
+    document.getElementById('step' + to).classList.add('active');
+    currentStep = to;
+    updateStepUI(to);
+  }
+
+  async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password + 'bnaiq_salt_2025');
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function submitRegistration() {
+    const email = document.getElementById('s2Email').value.trim();
+    const pass = document.getElementById('s2Pass').value;
+    const first = document.getElementById('s1First').value.trim();
+    const last = document.getElementById('s1Last').value.trim();
+    const company = document.getElementById('s1Company').value.trim();
+    const license = document.getElementById('s1License').value.trim();
+    const type = document.getElementById('s1Type').value;
+
+    const hashed = await hashPassword(pass);
+    const users = JSON.parse(localStorage.getItem('bnaiq_users') || '[]');
+
+    if (users.find(u => u.email === email)) return alert('An account with this email already exists.');
+
+    const newUser = { id: 'u_' + Date.now(), type: 'company', firstName: first, lastName: last, email, passwordHash: hashed, company, license, speciality: type, createdAt: new Date().toISOString(), verified: false };
+    users.push(newUser);
+    localStorage.setItem('bnaiq_users', JSON.stringify(users));
+
+    const session = { userId: newUser.id, email, name: first, type: 'company', loginAt: Date.now() };
+    sessionStorage.setItem('bnaiq_session', JSON.stringify(session));
+
+    document.getElementById('step3').style.display = 'none';
+    document.getElementById('stepProgress').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+  }
+</script>
+</body>
+</html>

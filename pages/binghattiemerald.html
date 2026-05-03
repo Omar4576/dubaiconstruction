@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binghatti Emerald — Live Project Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ─── DESIGN SYSTEM ─── */
+    :root {
+      --em: #00C896;        /* emerald */
+      --em-dim: rgba(0,200,150,0.12);
+      --em-border: rgba(0,200,150,0.3);
+      --gold: #D4A843;
+      --gold-dim: rgba(212,168,67,0.12);
+      --bg:   #080A0C;
+      --bg2:  #0D1014;
+      --bg3:  #131820;
+      --surf: #1A2030;
+      --surf2:#202838;
+      --border: rgba(255,255,255,0.06);
+      --border2:rgba(255,255,255,0.11);
+      --text:  #ECE8DF;
+      --muted: #7A8090;
+      --sub:   #B0B8C8;
+      --red:   #E05555;
+      --blue:  #4A90D9;
+      --yellow:#E0A830;
+      --r:6px; --r2:12px; --r3:20px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-track{background:var(--bg2);}
+    ::-webkit-scrollbar-thumb{background:var(--surf2);border-radius:10px;}
+    ::selection{background:var(--em-dim);color:var(--em);}
+
+    /* ─── SCANLINE / NOISE ATMOSPHERE ─── */
+    body::after{
+      content:'';position:fixed;inset:0;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+      pointer-events:none;z-index:9999;
+    }
+
+    /* ─── NAV ─── */
+    nav{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 40px;
+      background:rgba(8,10,12,0.9);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .nav-logo{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:22px;letter-spacing:2px;
+      color:var(--text);text-decoration:none;
+    }
+    .nav-logo span{color:var(--em);}
+    .nav-right{display:flex;align-items:center;gap:10px;}
+    .live-dot{
+      display:flex;align-items:center;gap:7px;
+      font-size:12px;font-weight:600;color:var(--em);
+      font-family:'JetBrains Mono',monospace;
+      letter-spacing:0.5px;
+    }
+    .live-dot::before{
+      content:'';width:8px;height:8px;border-radius:50%;background:var(--em);
+      box-shadow:0 0 0 3px rgba(0,200,150,0.2);
+      animation:livePulse 1.5s infinite;
+    }
+    @keyframes livePulse{0%,100%{box-shadow:0 0 0 3px rgba(0,200,150,0.2);}50%{box-shadow:0 0 0 7px rgba(0,200,150,0.05);}}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;text-decoration:none;transition:all 0.2s;}
+    .btn-em{background:var(--em);color:#040F0A;letter-spacing:0.3px;}
+    .btn-em:hover{background:#00E0AA;box-shadow:0 4px 20px rgba(0,200,150,0.3);}
+    .btn-ghost{background:none;border:1px solid var(--border2);color:var(--muted);}
+    .btn-ghost:hover{border-color:var(--em-border);color:var(--em);}
+    .btn-sm{padding:6px 13px;font-size:12px;}
+
+    /* ─── PAGE ─── */
+    .page{max-width:1360px;margin:0 auto;padding:32px 40px 80px;}
+
+    /* ─── PROJECT HEADER ─── */
+    .proj-header{
+      display:grid;grid-template-columns:1fr auto;gap:24px;
+      align-items:start;margin-bottom:32px;
+      padding-bottom:28px;border-bottom:1px solid var(--border);
+    }
+    .proj-eyebrow{
+      display:flex;align-items:center;gap:10px;margin-bottom:12px;
+    }
+    .eyebrow-tag{
+      font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+      letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;
+      border-radius:100px;background:var(--em-dim);border:1px solid var(--em-border);color:var(--em);
+    }
+    .dev-tag{
+      font-family:'JetBrains Mono',monospace;font-size:10px;
+      letter-spacing:1px;color:var(--muted);
+    }
+    h1.proj-title{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(42px,5vw,72px);
+      letter-spacing:2px;line-height:0.95;
+      color:var(--text);margin-bottom:14px;
+    }
+    h1.proj-title span{color:var(--em);}
+    .proj-meta-row{display:flex;gap:24px;flex-wrap:wrap;}
+    .meta-chip{
+      display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub);
+    }
+    .meta-chip .icon{font-size:14px;}
+
+    .proj-header-right{text-align:right;}
+    .completion-ring{display:inline-block;position:relative;width:120px;height:120px;}
+    .completion-ring svg{transform:rotate(-90deg);}
+    .ring-track{fill:none;stroke:var(--surf2);stroke-width:10;}
+    .ring-prog{
+      fill:none;stroke:var(--em);stroke-width:10;stroke-linecap:round;
+      stroke-dasharray:327.1;
+      stroke-dashoffset:186.4; /* 100 - 43% = 57% of 327 */
+      filter:drop-shadow(0 0 6px rgba(0,200,150,0.5));
+      transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .ring-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+    .ring-pct{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:var(--em);line-height:1;}
+    .ring-lbl{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-top:2px;}
+    .proj-header-right p{font-size:12px;color:var(--muted);margin-top:10px;font-family:'JetBrains Mono',monospace;}
+
+    /* ─── KPI STRIP ─── */
+    .kpi-strip{
+      display:grid;grid-template-columns:repeat(6,1fr);gap:12px;
+      margin-bottom:32px;
+    }
+    .kpi{
+      background:var(--surf);border:1px solid var(--border);
+      border-radius:var(--r2);padding:16px 18px;
+      transition:border-color 0.2s,transform 0.2s;
+    }
+    .kpi:hover{border-color:var(--em-border);transform:translateY(-2px);}
+    .kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:7px;font-family:'JetBrains Mono',monospace;}
+    .kpi-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;line-height:1;}
+    .kpi-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+    .kpi.em .kpi-val{color:var(--em);}
+    .kpi.gold .kpi-val{color:var(--gold);}
+    .kpi.red .kpi-val{color:var(--red);}
+
+    /* ─── MAIN BODY GRID ─── */
+    .body-grid{display:grid;grid-template-columns:1fr 420px;gap:24px;}
+
+    /* ─── SECTION WRAPPER ─── */
+    .section{
+      background:var(--bg2);border:1px solid var(--border);
+      border-radius:var(--r3);overflow:hidden;
+      margin-bottom:20px;
+    }
+    .section-head{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:18px 24px;border-bottom:1px solid var(--border);
+      background:var(--bg3);
+    }
+    .section-title{
+      font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text);
+    }
+    .section-body{padding:24px;}
+
+    /* ─── BUILDING SVG WRAPPER ─── */
+    .building-wrap{
+      display:flex;gap:28px;align-items:flex-end;
+      padding:28px 24px;
+    }
+    .building-svg-col{flex-shrink:0;}
+    .building-info-col{flex:1;display:flex;flex-direction:column;gap:14px;}
+
+    /* Building SVG */
+    .bld-svg { display:block; }
+    .bld-floor { transition:fill 0.3s; cursor:pointer; }
+    .bld-floor:hover { opacity:0.85; }
+    .bld-tooltip{
+      position:absolute;
+      background:var(--surf2);border:1px solid var(--em-border);
+      color:var(--text);font-size:12px;padding:8px 12px;
+      border-radius:var(--r);pointer-events:none;
+      white-space:nowrap;z-index:50;display:none;
+      font-family:'JetBrains Mono',monospace;
+      box-shadow:0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    /* Floor legend */
+    .floor-legend{display:flex;flex-direction:column;gap:8px;}
+    .legend-row{display:flex;align-items:center;gap:10px;font-size:13px;}
+    .leg-swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+
+    /* Floor progress stats */
+    .floor-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .floor-stat{
+      background:var(--bg3);border-radius:var(--r);
+      padding:12px 14px;
+    }
+    .floor-stat-num{
+      font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;
+    }
+    .floor-stat-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+
+    /* ─── WORKERS & MATERIALS PANEL ─── */
+    .workers-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:20px 24px;}
+    .worker-card{
+      background:var(--bg3);border-radius:var(--r2);padding:16px;
+      border:1px solid var(--border);
+      transition:border-color 0.2s;
+    }
+    .worker-card:hover{border-color:var(--em-border);}
+    .worker-role{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+    .worker-count{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--text);}
+    .worker-shift{font-size:12px;color:var(--muted);margin-top:2px;}
+    .worker-bar-wrap{margin-top:8px;height:3px;border-radius:100px;background:var(--surf2);overflow:hidden;}
+    .worker-bar{height:100%;border-radius:100px;background:var(--em);}
+
+    .materials-list{padding:0 24px 20px;display:flex;flex-direction:column;gap:10px;}
+    .mat-row{
+      display:flex;align-items:center;gap:14px;
+      padding:12px 14px;background:var(--bg3);border-radius:var(--r2);
+      border:1px solid var(--border);
+    }
+    .mat-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0;}
+    .mat-info{flex:1;}
+    .mat-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+    .mat-detail{font-size:12px;color:var(--muted);}
+    .mat-right{text-align:right;flex-shrink:0;}
+    .mat-qty{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.5px;}
+    .mat-unit{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .mat-status{margin-top:3px;}
+
+    /* ─── UNIT PRICING ─── */
+    .units-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:20px 24px;}
+    .unit-card{
+      background:var(--bg3);border-radius:var(--r2);
+      border:1px solid var(--border);overflow:hidden;
+      transition:all 0.25s;cursor:pointer;
+    }
+    .unit-card:hover{border-color:var(--em-border);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.4);}
+    .unit-card.featured{border-color:var(--gold);background:linear-gradient(160deg,rgba(212,168,67,0.07),var(--bg3));}
+    .unit-thumb{
+      height:100px;
+      display:flex;align-items:center;justify-content:center;
+      font-size:40px;position:relative;
+      overflow:hidden;
+    }
+    .unit-avail{
+      position:absolute;top:10px;right:10px;
+      font-size:10px;font-weight:700;padding:2px 9px;
+      border-radius:100px;font-family:'JetBrains Mono',monospace;
+      letter-spacing:0.5px;
+    }
+    .avail-yes{background:rgba(0,200,150,0.15);border:1px solid var(--em-border);color:var(--em);}
+    .avail-ltd{background:rgba(212,168,67,0.15);border:1px solid rgba(212,168,67,0.35);color:var(--gold);}
+    .avail-sold{background:rgba(224,85,85,0.12);border:1px solid rgba(224,85,85,0.3);color:var(--red);}
+    .unit-body{padding:16px;}
+    .unit-type{
+      font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;
+      margin-bottom:4px;
+    }
+    .unit-size{font-size:12px;color:var(--muted);margin-bottom:12px;font-family:'JetBrains Mono',monospace;}
+    .unit-price-row{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;}
+    .unit-price{
+      font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;
+      color:var(--em);line-height:1;
+    }
+    .unit-psf{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .unit-features{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
+    .unit-feat{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px;}
+    .unit-feat::before{content:'—';color:var(--em);font-weight:700;}
+    .unit-footer{
+      padding:12px 16px;border-top:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .unit-handover{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .unit-sold-count{font-size:12px;font-weight:600;}
+
+    /* ─── MILESTONES ─── */
+    .ms-timeline{padding:20px 24px;display:flex;flex-direction:column;gap:0;}
+    .ms-item{display:flex;gap:14px;padding-bottom:0;}
+    .ms-connector{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;}
+    .ms-dot{
+      width:26px;height:26px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:700;flex-shrink:0;z-index:1;
+    }
+    .ms-dot.done{background:var(--em);color:#040F0A;box-shadow:0 0 12px rgba(0,200,150,0.4);}
+    .ms-dot.active{background:var(--gold);color:#040F0A;animation:livePulse2 2s infinite;}
+    .ms-dot.pending{background:var(--surf2);border:1px solid var(--border2);color:var(--muted);}
+    @keyframes livePulse2{0%,100%{box-shadow:0 0 0 3px rgba(212,168,67,0.2);}50%{box-shadow:0 0 0 8px rgba(212,168,67,0.05);}}
+    .ms-line{flex:1;width:1px;background:var(--border);margin:2px 0;min-height:24px;}
+    .ms-body{flex:1;padding-bottom:20px;}
+    .ms-name{font-size:14px;font-weight:600;margin-bottom:3px;}
+    .ms-name.done{color:var(--sub);text-decoration:line-through;text-decoration-color:var(--em);}
+    .ms-name.active{color:var(--gold);}
+    .ms-date{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+    .ms-prog{margin-top:8px;}
+    .ms-prog-bar{height:3px;border-radius:100px;background:var(--surf2);overflow:hidden;margin-bottom:4px;}
+    .ms-prog-fill{height:100%;border-radius:100px;background:var(--gold);}
+    .ms-prog-label{font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace;}
+
+    /* ─── SIDEBAR ─── */
+    .side-col{display:flex;flex-direction:column;gap:20px;}
+
+    /* Budget donut */
+    .budget-donut-wrap{
+      display:flex;align-items:center;gap:20px;
+      padding:20px 24px;
+    }
+    .donut-container{position:relative;width:110px;height:110px;flex-shrink:0;}
+    .donut-container svg{transform:rotate(-90deg);}
+    .donut-track{fill:none;stroke:var(--surf2);stroke-width:12;}
+    .donut-fill{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease;}
+    .donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+    .donut-pct{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;line-height:1;}
+    .donut-sub{font-size:9px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.5px;}
+    .budget-details{flex:1;}
+    .bud-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .bud-row:last-child{border-bottom:none;}
+    .bud-lbl{color:var(--muted);}
+    .bud-val{font-weight:600;}
+
+    /* Updates */
+    .upd-list{padding:0 24px 20px;display:flex;flex-direction:column;}
+    .upd-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+    .upd-item:last-child{border-bottom:none;}
+    .upd-dot{width:7px;height:7px;border-radius:50%;background:var(--em);flex-shrink:0;margin-top:6px;}
+    .upd-date{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-bottom:3px;letter-spacing:0.5px;}
+    .upd-text{font-size:13px;color:var(--sub);line-height:1.5;}
+
+    /* Info rows */
+    .info-rows{padding:0 24px 20px;}
+    .info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .info-row:last-child{border-bottom:none;}
+    .info-lbl{color:var(--muted);}
+    .info-val{font-weight:600;text-align:right;}
+
+    /* ─── SITE CAM MOCKUP ─── */
+    .cam-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 20px 20px;}
+    .cam-feed{
+      background:var(--bg3);border-radius:var(--r2);
+      border:1px solid var(--border);overflow:hidden;position:relative;
+      aspect-ratio:16/9;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .cam-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(0,0,0,0.3),transparent);
+    }
+    .cam-label{
+      position:absolute;bottom:8px;left:10px;
+      font-size:10px;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);
+    }
+    .cam-rec{
+      position:absolute;top:8px;right:10px;
+      display:flex;align-items:center;gap:5px;
+      font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:600;
+      letter-spacing:1px;
+    }
+    .cam-rec::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);animation:livePulse 1s infinite;}
+    .cam-emoji{font-size:36px;opacity:0.2;}
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:1100px){
+      .body-grid{grid-template-columns:1fr;}
+      .kpi-strip{grid-template-columns:repeat(3,1fr);}
+    }
+    @media(max-width:700px){
+      .page{padding:20px 16px 60px;}
+      nav{padding:12px 18px;}
+      .proj-header{grid-template-columns:1fr;}
+      .kpi-strip{grid-template-columns:repeat(2,1fr);}
+      .units-grid{grid-template-columns:1fr;}
+      .building-wrap{flex-direction:column;align-items:center;}
+      .workers-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">BNA<span>IQ</span></a>
+  <div class="nav-right">
+    <div class="live-dot">LIVE TRACKER</div>
+    <a href="pricing.html" class="btn btn-ghost btn-sm">Plans</a>
+    <a href="dashboard.html" class="btn btn-em btn-sm">Dashboard</a>
+  </div>
+</nav>
+
+<div id="bld-tooltip" class="bld-tooltip"></div>
+
+<div class="page">
+
+  <!-- ─── PROJECT HEADER ─── -->
+  <div class="proj-header">
+    <div>
+      <div class="proj-eyebrow">
+        <span class="eyebrow-tag">● LIVE · JVC · DUBAI</span>
+        <span class="dev-tag">Developer: Binghatti Developers LLC</span>
+      </div>
+      <h1 class="proj-title">BINGHATTI<br><span>EMERALD</span></h1>
+      <div class="proj-meta-row">
+        <span class="meta-chip"><span class="icon">📍</span> Jumeirah Village Circle, District 11, Dubai</span>
+        <span class="meta-chip"><span class="icon">🏗️</span> 29 Residential Floors + 3 Basement Levels</span>
+        <span class="meta-chip"><span class="icon">📅</span> Q1 2024 – Q4 2026</span>
+        <span class="meta-chip"><span class="icon">🪪</span> DM-RES-2023-4471 · RERA Reg. 2024/12441</span>
+      </div>
+    </div>
+    <div class="proj-header-right">
+      <div class="completion-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle class="ring-track" cx="60" cy="60" r="52"/>
+          <circle class="ring-prog" cx="60" cy="60" r="52"/>
+        </svg>
+        <div class="ring-text">
+          <div class="ring-pct">43%</div>
+          <div class="ring-lbl">COMPLETE</div>
+        </div>
+      </div>
+      <p>Updated: May 03, 2025<br>Next report: May 10, 2025</p>
+    </div>
+  </div>
+
+  <!-- ─── KPI STRIP ─── -->
+  <div class="kpi-strip">
+    <div class="kpi em">
+      <div class="kpi-label">Overall Progress</div>
+      <div class="kpi-val">43%</div>
+      <div class="kpi-sub">13 of 29 floors complete</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total Units</div>
+      <div class="kpi-val">392</div>
+      <div class="kpi-sub">Studio / 1BR / 2BR / 3BR</div>
+    </div>
+    <div class="kpi gold">
+      <div class="kpi-label">Units Sold</div>
+      <div class="kpi-val">71%</div>
+      <div class="kpi-sub">278 of 392 sold</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Workers On Site</div>
+      <div class="kpi-val" id="workerCount">847</div>
+      <div class="kpi-sub">As of 06:00 today</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Contract Value</div>
+      <div class="kpi-val">AED 1.1B</div>
+      <div class="kpi-sub">Total development cost</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Days to Handover</div>
+      <div class="kpi-val" id="daysLeft">—</div>
+      <div class="kpi-sub">Target Dec 31, 2026</div>
+    </div>
+  </div>
+
+  <!-- ─── MAIN BODY ─── -->
+  <div class="body-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- BUILDING VISUALIZER -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Floor-by-Floor Progress</div>
+          <span style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Floors 1–29 + Podium</span>
+        </div>
+        <div class="building-wrap">
+          <!-- SVG BUILDING -->
+          <div class="building-svg-col" style="position:relative;">
+            <svg class="bld-svg" width="210" height="660" viewBox="0 0 210 660" id="buildingSVG">
+              <!-- Ground -->
+              <rect x="5" y="645" width="200" height="8" rx="3" fill="#1A2030"/>
+              <!-- Basement label -->
+              <text x="105" y="658" text-anchor="middle" fill="#4A5568" font-size="9" font-family="JetBrains Mono">GROUND LEVEL</text>
+            </svg>
+          </div>
+
+          <!-- INFO PANEL -->
+          <div class="building-info-col">
+            <div class="floor-legend">
+              <div class="legend-row"><div class="leg-swatch" style="background:var(--em);box-shadow:0 0 8px rgba(0,200,150,0.4);"></div><span>Structure Complete &amp; Inspected</span></div>
+              <div class="legend-row"><div class="leg-swatch" style="background:var(--gold);"></div><span>In Progress (Active Pour / Formwork)</span></div>
+              <div class="legend-row"><div class="leg-swatch" style="background:var(--surf2);border:1px dashed rgba(255,255,255,0.1);"></div><span>Pending — Not Started</span></div>
+              <div class="legend-row"><div class="leg-swatch" style="background:var(--blue);"></div><span>MEP / Fit-Out Active</span></div>
+            </div>
+
+            <div class="floor-stat-grid">
+              <div class="floor-stat">
+                <div class="floor-stat-num" style="color:var(--em);">13</div>
+                <div class="floor-stat-lbl">Floors Structurally Complete</div>
+              </div>
+              <div class="floor-stat">
+                <div class="floor-stat-num" style="color:var(--gold);">1</div>
+                <div class="floor-stat-lbl">Floor Currently Active</div>
+              </div>
+              <div class="floor-stat">
+                <div class="floor-stat-num" style="color:var(--sub);">15</div>
+                <div class="floor-stat-lbl">Floors Pending Structure</div>
+              </div>
+              <div class="floor-stat">
+                <div class="floor-stat-num" style="color:var(--blue);">8</div>
+                <div class="floor-stat-lbl">Floors: MEP Fit-Out Active</div>
+              </div>
+            </div>
+
+            <div style="background:var(--bg3);border-radius:var(--r2);padding:14px 16px;border:1px solid var(--border);">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Current Floor</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--gold);">Floor 14 — Slab Pour</div>
+              <div style="font-size:13px;color:var(--sub);margin-top:4px;">Concrete pour in progress. 420m² deck poured. Est. completion: 08 May 2025.</div>
+            </div>
+
+            <div style="background:var(--bg3);border-radius:var(--r2);padding:14px 16px;border:1px solid var(--em-border);">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--em);font-family:'JetBrains Mono',monospace;margin-bottom:8px;">Next Milestone</div>
+              <div style="font-size:14px;font-weight:600;color:var(--text);">Structural Topping Out — Floor 29</div>
+              <div style="font-size:13px;color:var(--sub);margin-top:4px;">Estimated: November 2025. On-track as of this report.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WORKERS ON SITE -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Workforce — Today's Deployment</div>
+          <span style="font-size:12px;color:var(--em);font-family:'JetBrains Mono',monospace;">847 TOTAL ON SITE</span>
+        </div>
+        <div class="workers-grid">
+          <div class="worker-card">
+            <div class="worker-role">Structural / Concrete</div>
+            <div class="worker-count">248</div>
+            <div class="worker-shift">Day shift (06:00–18:00)</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:85%;"></div></div>
+          </div>
+          <div class="worker-card">
+            <div class="worker-role">MEP Engineers & Technicians</div>
+            <div class="worker-count">184</div>
+            <div class="worker-shift">Day shift · Floors 5–12</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:63%;background:var(--blue);"></div></div>
+          </div>
+          <div class="worker-card">
+            <div class="worker-role">Steel Fixers & Formwork</div>
+            <div class="worker-count">156</div>
+            <div class="worker-shift">Day shift · Floors 13–14</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:54%;background:var(--gold);"></div></div>
+          </div>
+          <div class="worker-card">
+            <div class="worker-role">Fit-Out Specialists</div>
+            <div class="worker-count">118</div>
+            <div class="worker-shift">Day shift · Floors 1–4</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:40%;background:#9B59B6;"></div></div>
+          </div>
+          <div class="worker-card">
+            <div class="worker-role">Façade / Cladding Crew</div>
+            <div class="worker-count">72</div>
+            <div class="worker-shift">Day shift · Floors 1–8</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:25%;background:var(--em);"></div></div>
+          </div>
+          <div class="worker-card">
+            <div class="worker-role">Safety, QA & Supervisors</div>
+            <div class="worker-count">69</div>
+            <div class="worker-shift">Full day coverage</div>
+            <div class="worker-bar-wrap"><div class="worker-bar" style="width:24%;background:var(--red);"></div></div>
+          </div>
+        </div>
+        <div style="margin:0 24px 20px;padding:14px 16px;background:var(--bg3);border-radius:var(--r2);border:1px solid var(--border);display:flex;gap:32px;flex-wrap:wrap;">
+          <div>
+            <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">NIGHT SHIFT (18:00–06:00)</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;">412 Workers</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">PEAK DAY (LAST 30 DAYS)</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;">1,041 Workers</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">NATIONALITIES ON SITE</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;">18</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:1px;margin-bottom:4px;">SAFETY INCIDENTS (YTD)</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--em);">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MATERIALS ON SITE -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Materials — Current Stock & Deliveries</div>
+          <button class="btn btn-ghost btn-sm">Full Inventory →</button>
+        </div>
+        <div class="materials-list">
+          <div class="mat-row">
+            <div class="mat-icon">🏗️</div>
+            <div class="mat-info">
+              <div class="mat-name">Ready-Mix Concrete (C40 Grade)</div>
+              <div class="mat-detail">Supplier: Al Futtaim Readymix · Delivered daily 05:00–09:00</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--em);">1,840</div>
+              <div class="mat-unit">m³ / WEEK</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--em);">● On schedule</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🔩</div>
+            <div class="mat-info">
+              <div class="mat-name">Structural Rebar (Grade 60)</div>
+              <div class="mat-detail">Supplier: Emirates Steel · Stock: 3 weeks ahead</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--em);">420</div>
+              <div class="mat-unit">MT ON SITE</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--em);">● Sufficient</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🪟</div>
+            <div class="mat-info">
+              <div class="mat-name">Aluminium Curtain Wall Units (Façade)</div>
+              <div class="mat-detail">Supplier: Alumco Dubai · Floors 1-8 panels in yard</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--gold);">312</div>
+              <div class="mat-unit">PANELS</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--gold);">● 40% installed</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🧱</div>
+            <div class="mat-info">
+              <div class="mat-name">AAC Blockwork (Internal Walls)</div>
+              <div class="mat-detail">Supplier: Ytong UAE · Floors 1-8 laid</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--em);">18,400</div>
+              <div class="mat-unit">BLOCKS</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--em);">● Stocked</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">⚡</div>
+            <div class="mat-info">
+              <div class="mat-name">HV / LV Cabling & Conduit</div>
+              <div class="mat-detail">Supplier: Prysmian UAE · MEP floors 5-12</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--blue);">84</div>
+              <div class="mat-unit">KM CABLE</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--blue);">● In progress</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🚿</div>
+            <div class="mat-info">
+              <div class="mat-name">GRP / CPVC Plumbing Systems</div>
+              <div class="mat-detail">Supplier: Ashirvad Pipes · Risers B1 to FL8 done</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--em);">6.2</div>
+              <div class="mat-unit">KM PIPE</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--em);">● 28% complete</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🌬️</div>
+            <div class="mat-info">
+              <div class="mat-name">HVAC Ducting & Fan Coil Units</div>
+              <div class="mat-detail">Supplier: Johnson Controls · FCU delivery ETA May 20</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--yellow);">392</div>
+              <div class="mat-unit">FCU UNITS</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--yellow);">⚠ Awaiting delivery</span></div>
+            </div>
+          </div>
+          <div class="mat-row">
+            <div class="mat-icon">🏊</div>
+            <div class="mat-info">
+              <div class="mat-name">Porcelain Floor Tiles (Italian, 600×600)</div>
+              <div class="mat-detail">Supplier: Ceramiche Atlas · Fit-out floors 1-4</div>
+            </div>
+            <div class="mat-right">
+              <div class="mat-qty" style="color:var(--em);">12,400</div>
+              <div class="mat-unit">SQM</div>
+              <div class="mat-status"><span style="font-size:11px;color:var(--em);">● In stock</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MILESTONES -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Project Milestones</div>
+          <span style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;">6 / 12 COMPLETE</span>
+        </div>
+        <div class="ms-timeline">
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">Piling &amp; Foundation Works</div><div class="ms-date">COMPLETED · Mar 2024</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">Basement B3 / B2 / B1 Structure</div><div class="ms-date">COMPLETED · Jun 2024</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">Podium &amp; Ground Floor RC Frame</div><div class="ms-date">COMPLETED · Sep 2024</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">Tower Structure Floors 1–10</div><div class="ms-date">COMPLETED · Jan 2025</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">Façade Cladding — Floors 1–8</div><div class="ms-date">COMPLETED · Mar 2025</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot done">✓</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name done">MEP Rough-In Floors 1–8</div><div class="ms-date">COMPLETED · Apr 2025</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot active">▶</div><div class="ms-line"></div></div>
+            <div class="ms-body">
+              <div class="ms-name active">Tower Structure Floors 11–20</div>
+              <div class="ms-date">IN PROGRESS · TARGET Aug 2025</div>
+              <div class="ms-prog">
+                <div class="ms-prog-bar"><div class="ms-prog-fill" style="width:37%;"></div></div>
+                <div class="ms-prog-label">37% · Floor 14 active pour</div>
+              </div>
+            </div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot pending">8</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name">Tower Structure Floors 21–29</div><div class="ms-date">PENDING · TARGET Nov 2025</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot pending">9</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name">Structural Topping Out Ceremony</div><div class="ms-date">TARGET · Nov 2025</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot pending">10</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name">MEP &amp; Fit-Out Floors 9–29</div><div class="ms-date">TARGET · Sep 2026</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot pending">11</div><div class="ms-line"></div></div>
+            <div class="ms-body"><div class="ms-name">Façade, Landscaping &amp; Amenities</div><div class="ms-date">TARGET · Oct 2026</div></div>
+          </div>
+          <div class="ms-item">
+            <div class="ms-connector"><div class="ms-dot pending">12</div></div>
+            <div class="ms-body"><div class="ms-name">DM Final Inspection &amp; Handover</div><div class="ms-date">TARGET · Dec 2026</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SITE CAMERAS (mockup) -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Live Site Cameras</div>
+          <span style="font-size:12px;color:var(--red);font-family:'JetBrains Mono',monospace;">● 4 FEEDS ACTIVE</span>
+        </div>
+        <div class="cam-grid">
+          <div class="cam-feed" style="background:linear-gradient(135deg,#0a1520,#0d1e2a);">
+            <div class="cam-emoji">🏗️</div>
+            <div class="cam-overlay"></div>
+            <div class="cam-label">CAM-01 · NORTH ELEVATION</div>
+            <div class="cam-rec">REC</div>
+          </div>
+          <div class="cam-feed" style="background:linear-gradient(135deg,#0f0a18,#150f22);">
+            <div class="cam-emoji">🧱</div>
+            <div class="cam-overlay"></div>
+            <div class="cam-label">CAM-02 · FLOOR 14 · ACTIVE POUR</div>
+            <div class="cam-rec">REC</div>
+          </div>
+          <div class="cam-feed" style="background:linear-gradient(135deg,#071510,#0a1e15);">
+            <div class="cam-emoji">🏘️</div>
+            <div class="cam-overlay"></div>
+            <div class="cam-label">CAM-03 · PODIUM / LOBBY ENTRY</div>
+            <div class="cam-rec">REC</div>
+          </div>
+          <div class="cam-feed" style="background:linear-gradient(135deg,#151005,#1e1808);">
+            <div class="cam-emoji">🏊</div>
+            <div class="cam-overlay"></div>
+            <div class="cam-label">CAM-04 · ROOFTOP POOL DECK</div>
+            <div class="cam-rec">REC</div>
+          </div>
+        </div>
+        <div style="padding:0 20px 18px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+          Full HD feeds available to verified investors and DM inspectors. Access requires Pro or Enterprise account.
+        </div>
+      </div>
+
+    </div><!-- /left col -->
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="side-col">
+
+      <!-- UNIT PRICING PANEL -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Unit Pricing</div>
+          <span class="eyebrow-tag" style="font-size:10px;">STARTING PRICES</span>
+        </div>
+        <div class="units-grid" style="grid-template-columns:1fr;padding:16px 20px;gap:12px;">
+
+          <!-- STUDIO -->
+          <div class="unit-card">
+            <div class="unit-thumb" style="background:linear-gradient(135deg,#0a1a14,#071510);">
+              <span style="font-size:32px;">🛏️</span>
+              <span class="unit-avail avail-ltd">4 LEFT</span>
+            </div>
+            <div class="unit-body">
+              <div class="unit-type">Studio Apartment</div>
+              <div class="unit-size">386 – 452 SQF · Type S-01 to S-04</div>
+              <div class="unit-price-row">
+                <div>
+                  <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;">FROM</div>
+                  <div class="unit-price">AED 549,000</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="unit-psf">AED 1,421 / sqft</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Avg AED 580K</div>
+                </div>
+              </div>
+              <div class="unit-features">
+                <div class="unit-feat">Fully fitted kitchen (Bosch appliances)</div>
+                <div class="unit-feat">Smart home automation pre-wired</div>
+                <div class="unit-feat">Built-in wardrobes</div>
+                <div class="unit-feat">Central A/C (DEWA-connected)</div>
+                <div class="unit-feat">1 underground parking bay</div>
+              </div>
+            </div>
+            <div class="unit-footer">
+              <span class="unit-handover">HANDOVER: Q4 2026</span>
+              <span class="unit-sold-count" style="color:var(--gold);">78 of 82 sold</span>
+            </div>
+          </div>
+
+          <!-- 1BR -->
+          <div class="unit-card featured">
+            <div class="unit-thumb" style="background:linear-gradient(135deg,#1a1205,#100c03);">
+              <span style="font-size:32px;">🏠</span>
+              <span class="unit-avail avail-yes">AVAILABLE</span>
+            </div>
+            <div class="unit-body">
+              <div class="unit-type" style="color:var(--gold);">1-Bedroom Apartment</div>
+              <div class="unit-size">750 – 942 SQF · Type A-01 to A-08</div>
+              <div class="unit-price-row">
+                <div>
+                  <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;">FROM</div>
+                  <div class="unit-price" style="color:var(--gold);">AED 899,000</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="unit-psf">AED 1,198 / sqft</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Avg AED 975K</div>
+                </div>
+              </div>
+              <div class="unit-features">
+                <div class="unit-feat">Open-plan living & dining</div>
+                <div class="unit-feat">Juliet balcony or full terrace</div>
+                <div class="unit-feat">Miele kitchen appliances</div>
+                <div class="unit-feat">Master bath with rain shower</div>
+                <div class="unit-feat">1 covered parking bay</div>
+                <div class="unit-feat">High-floor units: JVC skyline views</div>
+              </div>
+            </div>
+            <div class="unit-footer">
+              <span class="unit-handover">HANDOVER: Q4 2026</span>
+              <span class="unit-sold-count" style="color:var(--em);">104 of 148 sold</span>
+            </div>
+          </div>
+
+          <!-- 2BR -->
+          <div class="unit-card">
+            <div class="unit-thumb" style="background:linear-gradient(135deg,#0d1a25,#081525);">
+              <span style="font-size:32px;">🏡</span>
+              <span class="unit-avail avail-yes">AVAILABLE</span>
+            </div>
+            <div class="unit-body">
+              <div class="unit-type">2-Bedroom Apartment</div>
+              <div class="unit-size">1,120 – 1,380 SQF · Type B-01 to B-06</div>
+              <div class="unit-price-row">
+                <div>
+                  <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;">FROM</div>
+                  <div class="unit-price">AED 1,350,000</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="unit-psf">AED 1,205 / sqft</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Avg AED 1.55M</div>
+                </div>
+              </div>
+              <div class="unit-features">
+                <div class="unit-feat">2 full bathrooms + guest WC</div>
+                <div class="unit-feat">Maids room with ensuite</div>
+                <div class="unit-feat">Dedicated laundry room</div>
+                <div class="unit-feat">2 parking bays</div>
+                <div class="unit-feat">Corner units: dual aspect views</div>
+              </div>
+            </div>
+            <div class="unit-footer">
+              <span class="unit-handover">HANDOVER: Q4 2026</span>
+              <span class="unit-sold-count" style="color:var(--em);">72 of 120 sold</span>
+            </div>
+          </div>
+
+          <!-- 3BR -->
+          <div class="unit-card">
+            <div class="unit-thumb" style="background:linear-gradient(135deg,#1a0d1a,#120a12);">
+              <span style="font-size:32px;">🏰</span>
+              <span class="unit-avail avail-yes">AVAILABLE</span>
+            </div>
+            <div class="unit-body">
+              <div class="unit-type">3-Bedroom Penthouse</div>
+              <div class="unit-size">1,840 – 2,200 SQF · Floors 26–29 · Type P-01</div>
+              <div class="unit-price-row">
+                <div>
+                  <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;">FROM</div>
+                  <div class="unit-price" style="color:var(--gold);">AED 2,200,000</div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="unit-psf">AED 1,195 / sqft</div>
+                  <div style="font-size:11px;color:var(--muted);margin-top:2px;">Avg AED 2.4M</div>
+                </div>
+              </div>
+              <div class="unit-features">
+                <div class="unit-feat">Private terrace (350–400 sqft)</div>
+                <div class="unit-feat">Floor-to-ceiling glazing, 2.9m ceilings</div>
+                <div class="unit-feat">Miele + Gaggenau kitchen suite</div>
+                <div class="unit-feat">3 full bathrooms</div>
+                <div class="unit-feat">2 dedicated parking bays</div>
+                <div class="unit-feat">Panoramic JVC / Expo City views</div>
+              </div>
+            </div>
+            <div class="unit-footer">
+              <span class="unit-handover">HANDOVER: Q4 2026</span>
+              <span class="unit-sold-count" style="color:var(--em);">24 of 42 sold</span>
+            </div>
+          </div>
+
+          <!-- PAYMENT PLAN -->
+          <div style="background:var(--bg3);border-radius:var(--r2);border:1px solid var(--em-border);padding:16px;">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--em);font-family:'JetBrains Mono',monospace;margin-bottom:10px;">Binghatti Payment Plan</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">On Booking</span><span style="font-weight:700;color:var(--em);">20%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">During Construction</span><span style="font-weight:700;">40%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">On Handover (Q4 2026)</span><span style="font-weight:700;">40%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;">
+                <span style="color:var(--muted);">Post-Handover Option</span><span style="font-weight:700;color:var(--gold);">Available</span>
+              </div>
+            </div>
+            <div style="margin-top:12px;font-size:11px;color:var(--muted);">DLD fee 4% · Agency fee 2% · Mortgage financing available via partner banks. Service charge est. AED 12.5/sqft/yr.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- BUDGET TRACKER -->
+      <div class="section">
+        <div class="section-head"><div class="section-title">Budget Tracker</div></div>
+        <div class="budget-donut-wrap">
+          <div class="donut-container">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle class="donut-track" cx="55" cy="55" r="44"/>
+              <circle class="donut-fill" cx="55" cy="55" r="44"
+                stroke="var(--em)"
+                stroke-dasharray="276.5"
+                stroke-dashoffset="165.9"/><!-- 60% -->
+            </svg>
+            <div class="donut-center">
+              <div class="donut-pct" style="color:var(--em);">60%</div>
+              <div class="donut-sub">SPENT</div>
+            </div>
+          </div>
+          <div class="budget-details">
+            <div class="bud-row"><span class="bud-lbl">Total Budget</span><span class="bud-val">AED 1.10B</span></div>
+            <div class="bud-row"><span class="bud-lbl">Committed / Spent</span><span class="bud-val" style="color:var(--em);">AED 662M</span></div>
+            <div class="bud-row"><span class="bud-lbl">Remaining</span><span class="bud-val" style="color:var(--gold);">AED 438M</span></div>
+            <div class="bud-row"><span class="bud-lbl">Cost / Unit (avg)</span><span class="bud-val">AED 2.81M</span></div>
+            <div class="bud-row"><span class="bud-lbl">Contingency Reserve</span><span class="bud-val">AED 55M (5%)</span></div>
+          </div>
+        </div>
+        <div style="padding:0 24px 20px;">
+          <div style="background:var(--bg3);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--sub);line-height:1.6;">
+            Budget tracking aligns with RERA escrow requirements. 100% of off-plan sale proceeds are held in a DLD-supervised escrow account and released in tranches against verified construction milestones.
+          </div>
+        </div>
+      </div>
+
+      <!-- LATEST UPDATES -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">Site Updates</div>
+          <span style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);">WEEKLY REPORTS</span>
+        </div>
+        <div class="upd-list">
+          <div class="upd-item">
+            <div class="upd-dot"></div>
+            <div>
+              <div class="upd-date">03 MAY 2025</div>
+              <div class="upd-text">Floor 14 concrete pour commenced at 06:15. 280m³ of C40 mix poured from 3 pump trucks. Slab pour 67% complete as of 18:00 shift handover.</div>
+            </div>
+          </div>
+          <div class="upd-item">
+            <div class="upd-dot"></div>
+            <div>
+              <div class="upd-date">01 MAY 2025</div>
+              <div class="upd-text">Floor 13 DM structural inspection passed with zero deficiencies. Certificate of structural completion issued. MEP team mobilized to floor 13.</div>
+            </div>
+          </div>
+          <div class="upd-item">
+            <div class="upd-dot"></div>
+            <div>
+              <div class="upd-date">28 APR 2025</div>
+              <div class="upd-text">Façade cladding on floors 7–8 (north elevation) completed. 96 aluminium composite panel units installed. Curtain wall commissioning signed off by Alumco Dubai.</div>
+            </div>
+          </div>
+          <div class="upd-item">
+            <div class="upd-dot"></div>
+            <div>
+              <div class="upd-date">22 APR 2025</div>
+              <div class="upd-text">HVAC ductwork on floors 9–11 completed. FCU delivery from Johnson Controls rescheduled to 20 May. No impact on critical path.</div>
+            </div>
+          </div>
+          <div class="upd-item">
+            <div class="upd-dot" style="background:var(--gold);"></div>
+            <div>
+              <div class="upd-date">15 APR 2025</div>
+              <div class="upd-text">Quarterly investor briefing held at Binghatti HQ. Full Q1 progress report distributed. Overall project rated ON TRACK by project director.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT INFO -->
+      <div class="section">
+        <div class="section-head"><div class="section-title">Project Information</div></div>
+        <div class="info-rows">
+          <div class="info-row"><span class="info-lbl">Developer</span><span class="info-val">Binghatti Developers LLC</span></div>
+          <div class="info-row"><span class="info-lbl">Main Contractor</span><span class="info-val">Binghatti Contracting</span></div>
+          <div class="info-row"><span class="info-lbl">Structural Engineer</span><span class="info-val">KEO International</span></div>
+          <div class="info-row"><span class="info-lbl">MEP Consultant</span><span class="info-val">Mott MacDonald UAE</span></div>
+          <div class="info-row"><span class="info-lbl">PMSC</span><span class="info-val">Turner &amp; Townsend</span></div>
+          <div class="info-row"><span class="info-lbl">RERA Registration</span><span class="info-val">2024/12441</span></div>
+          <div class="info-row"><span class="info-lbl">DM Permit</span><span class="info-val">DM-RES-2023-4471</span></div>
+          <div class="info-row"><span class="info-lbl">Escrow Bank</span><span class="info-val">Emirates NBD</span></div>
+          <div class="info-row"><span class="info-lbl">Plot Area</span><span class="info-val">18,400 sqm</span></div>
+          <div class="info-row"><span class="info-lbl">GFA</span><span class="info-val">72,800 sqm</span></div>
+          <div class="info-row"><span class="info-lbl">Floors</span><span class="info-val">B3 + G + 29 Residential</span></div>
+          <div class="info-row"><span class="info-lbl">Parking Bays</span><span class="info-val">520</span></div>
+          <div class="info-row"><span class="info-lbl">Amenities</span><span class="info-val">Pool · Gym · Retail</span></div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+  </div><!-- /body-grid -->
+</div><!-- /page -->
+
+<script>
+// ── Days to handover ──
+const target = new Date('2026-12-31');
+const now = new Date();
+document.getElementById('daysLeft').textContent = Math.max(0, Math.round((target - now) / 86400000)).toLocaleString();
+
+// ── Worker count live flicker ──
+const base = 847;
+setInterval(() => {
+  const delta = Math.floor(Math.random() * 6) - 3;
+  document.getElementById('workerCount').textContent = (base + delta).toLocaleString();
+}, 4000);
+
+// ── Generate building SVG floors ──
+(function buildFloors() {
+  const svg = document.getElementById('buildingSVG');
+  const FLOORS = 29;
+  const W = 170;
+  const H = 18;
+  const GAP = 3;
+  const X = 20;
+  const START_Y = 635; // from bottom
+
+  // Floor states
+  // 1-13 done, 14 active, 5-12 MEP (blue overlay), 15-29 pending
+  const DONE_GREEN = '#00C896';
+  const ACTIVE_GOLD = '#D4A843';
+  const PENDING = '#1A2030';
+  const MEP_BLUE = '#4A90D9';
+
+  const floorData = [];
+  for (let f = 1; f <= FLOORS; f++) {
+    let color, state;
+    if (f <= 4) {
+      color = MEP_BLUE; state = 'MEP Fit-Out Active';
+    } else if (f <= 12) {
+      color = DONE_GREEN; state = 'Structural Complete + MEP';
+    } else if (f === 13) {
+      color = DONE_GREEN; state = 'Structural Complete';
+    } else if (f === 14) {
+      color = ACTIVE_GOLD; state = 'IN PROGRESS — Slab Pour';
+    } else {
+      color = PENDING; state = 'Pending';
+    }
+    floorData.push({ f, color, state });
+  }
+
+  // Add podium
+  const podiumY = START_Y - (FLOORS * (H + GAP)) - 10;
+
+  floorData.forEach(({ f, color, state }) => {
+    const y = START_Y - f * (H + GAP);
+
+    // Floor block
+    const rect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    rect.setAttribute('x', X);
+    rect.setAttribute('y', y);
+    rect.setAttribute('width', W);
+    rect.setAttribute('height', H);
+    rect.setAttribute('rx', 3);
+    rect.setAttribute('fill', color);
+    rect.setAttribute('class', 'bld-floor');
+    if (f <= 13 && color !== PENDING) {
+      rect.setAttribute('fill-opacity', '0.85');
+    } else if (color === PENDING) {
+      rect.setAttribute('fill-opacity', '1');
+    }
+
+    // Glow for active
+    if (f === 14) {
+      rect.setAttribute('filter', 'url(#goldGlow)');
+    }
+    if (color === DONE_GREEN && f > 4) {
+      rect.setAttribute('fill-opacity', '0.9');
+    }
+
+    // Floor label (every 5th or special)
+    if (f % 5 === 0 || f === 1 || f === 14 || f === FLOORS) {
+      const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+      text.setAttribute('x', X - 8);
+      text.setAttribute('y', y + H/2 + 4);
+      text.setAttribute('text-anchor', 'end');
+      text.setAttribute('fill', f === 14 ? '#D4A843' : '#4A5568');
+      text.setAttribute('font-size', '9');
+      text.setAttribute('font-family', 'JetBrains Mono');
+      text.textContent = f === 1 ? 'G' : (f === FLOORS ? `${f}★` : f);
+      svg.appendChild(text);
+    }
+
+    // Pulse animation line for active floor
+    if (f === 14) {
+      const pulse = document.createElementNS('http://www.w3.org/2000/svg','rect');
+      pulse.setAttribute('x', X);
+      pulse.setAttribute('y', y);
+      pulse.setAttribute('width', W);
+      pulse.setAttribute('height', H);
+      pulse.setAttribute('rx', 3);
+      pulse.setAttribute('fill', 'none');
+      pulse.setAttribute('stroke', '#D4A843');
+      pulse.setAttribute('stroke-width', '1.5');
+      pulse.innerHTML = `<animate attributeName="stroke-opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite"/>`;
+      svg.appendChild(pulse);
+    }
+
+    // Tooltip
+    rect.addEventListener('mouseenter', (e) => {
+      const tip = document.getElementById('bld-tooltip');
+      const label = f === 1 ? 'Ground Floor' : `Floor ${f}`;
+      tip.innerHTML = `<strong>${label}</strong><br>${state}`;
+      tip.style.display = 'block';
+      tip.style.left = (e.pageX + 12) + 'px';
+      tip.style.top = (e.pageY - 10) + 'px';
+    });
+    rect.addEventListener('mousemove', (e) => {
+      const tip = document.getElementById('bld-tooltip');
+      tip.style.left = (e.pageX + 12) + 'px';
+      tip.style.top = (e.pageY - 10) + 'px';
+    });
+    rect.addEventListener('mouseleave', () => {
+      document.getElementById('bld-tooltip').style.display = 'none';
+    });
+
+    svg.appendChild(rect);
+  });
+
+  // Glow filter def
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  defs.innerHTML = `
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  `;
+  svg.insertBefore(defs, svg.firstChild);
+
+  // Adjust SVG height
+  const totalH = FLOORS * (H + GAP) + 30;
+  svg.setAttribute('height', totalH + 20);
+  svg.setAttribute('viewBox', `0 0 210 ${totalH + 20}`);
+})();
+
+// ── Animate ring on load ──
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const ring = document.querySelector('.ring-prog');
+    if (ring) ring.style.strokeDashoffset = '186.4';
+  }, 300);
+});
+</script>
+</body>
+</html>

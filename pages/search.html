@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search Companies — BNAIQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-layout { display: flex; min-height: calc(100vh - 65px); }
+
+    /* SIDEBAR FILTERS */
+    .filter-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+      padding: 28px 20px;
+      background: var(--bg2);
+      position: sticky;
+      top: 65px;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+    }
+    .filter-section { margin-bottom: 28px; }
+    .filter-section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .filter-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 14px;
+      color: var(--text-muted);
+      user-select: none;
+    }
+    .filter-option:hover { background: var(--surface); color: var(--text); }
+    .filter-option.selected { background: var(--gold-dim); color: var(--gold); }
+    .filter-option .check {
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--border2);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      transition: all 0.15s;
+    }
+    .filter-option.selected .check {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0A0A0B;
+    }
+
+    /* RANGE SLIDER */
+    .range-wrap { padding: 4px 0; }
+    .range-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 100px;
+      background: linear-gradient(to right, var(--gold) var(--pct, 60%), var(--surface) var(--pct, 60%));
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 2px solid var(--bg);
+      cursor: pointer;
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.3);
+    }
+
+    .clear-btn {
+      width: 100%;
+      padding: 9px;
+      margin-top: 4px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+    /* RESULTS AREA */
+    .results-area {
+      flex: 1;
+      padding: 28px 32px;
+      overflow-y: auto;
+    }
+
+    .results-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .results-count { font-size: 14px; color: var(--text-muted); }
+    .results-count strong { color: var(--text); }
+
+    .sort-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      padding: 7px 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .view-toggle { display: flex; gap: 2px; }
+    .view-btn {
+      width: 34px; height: 34px;
+      border-radius: 7px;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      transition: all 0.15s;
+    }
+    .view-btn.active { background: var(--surface); color: var(--text); border-color: var(--border2); }
+
+    /* GRID VIEW */
+    .companies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    /* LIST VIEW */
+    .companies-list { display: flex; flex-direction: column; gap: 12px; }
+    .company-list-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+    .company-list-item:hover { border-color: var(--gold-border); transform: translateX(3px); }
+    .list-emoji { font-size: 40px; width: 60px; height: 60px; background: var(--bg3); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .list-info { flex: 1; }
+    .list-name { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .list-meta { font-size: 13px; color: var(--text-muted); display: flex; gap: 16px; flex-wrap: wrap; }
+    .list-right { text-align: right; flex-shrink: 0; }
+    .list-rating { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .list-rating .star { color: var(--gold); }
+    .list-projects { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+    /* COMPANY CARD (grid) */
+    .company-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .company-card:hover { transform: translateY(-4px); border-color: var(--gold-border); box-shadow: var(--shadow-lg); }
+    .card-thumb {
+      height: 160px;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 52px;
+      position: relative;
+    }
+    .card-thumb .v-badge {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(82,192,122,0.15);
+      border: 1px solid rgba(82,192,122,0.3);
+      color: var(--green);
+      font-size: 11px; font-weight: 600;
+      padding: 2px 9px; border-radius: 100px;
+    }
+    .card-thumb .pc-badge {
+      position: absolute; bottom: 10px; left: 10px;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      font-size: 11px; color: var(--text-muted);
+      padding: 3px 9px; border-radius: 100px;
+    }
+    .card-body { padding: 16px 18px; }
+    .card-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .card-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    .specs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .spec { font-size: 11px; background: var(--bg3); border: 1px solid var(--border); padding: 2px 8px; border-radius: 100px; color: var(--text-muted); }
+    .card-footer { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .card-rating { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+    .card-rating .star { color: var(--gold); }
+
+    /* SEARCH BAR TOP */
+    .search-top {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .search-input-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 14px;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+    .search-input-wrap:focus-within { border-color: var(--gold-border); }
+    .search-icon { color: var(--text-muted); font-size: 15px; }
+    .search-input-wrap input {
+      flex: 1; background: none; border: none; color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none;
+      padding: 11px 0;
+    }
+    .search-input-wrap input::placeholder { color: var(--text-muted); }
+
+    /* ACTIVE FILTERS ROW */
+    .active-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .active-filter-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold-border);
+      border-radius: 100px;
+      font-size: 12px; color: var(--gold);
+    }
+    .active-filter-tag button {
+      background: none; border: none; color: var(--gold);
+      cursor: pointer; font-size: 14px; line-height: 1; padding: 0;
+    }
+
+    /* PAGINATION */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-top: 36px;
+    }
+    .page-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text-muted);
+      transition: all 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .page-btn:hover { border-color: var(--border2); color: var(--text); }
+    .page-btn.active { background: var(--gold); border-color: var(--gold); color: #0A0A0B; }
+
+    @media (max-width: 900px) {
+      .filter-sidebar { display: none; }
+      .results-area { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a href="index.html" class="logo">BNA<span>IQ</span></a>
+  <div style="display:flex; gap:12px;">
+    <a href="dashboard.html" class="btn btn-ghost btn-sm">Dashboard</a>
+    <button class="btn btn-gold btn-sm" onclick="window.location='index.html'">← Home</button>
+  </div>
+</nav>
+
+<!-- SEARCH BAR -->
+<div class="search-top">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="mainSearch" placeholder="Search companies, specialities, locations..." oninput="applyFilters()">
+  </div>
+  <button class="btn btn-gold" onclick="applyFilters()">Search</button>
+</div>
+
+<div class="page-layout">
+  <!-- FILTER SIDEBAR -->
+  <aside class="filter-sidebar">
+    <!-- Speciality -->
+    <div class="filter-section">
+      <div class="filter-section-title">Speciality</div>
+      <div class="filter-option" onclick="toggleFilter('spec','all',this)" data-val="all">
+        <span class="check">✓</span> All Types
+      </div>
+      <div class="filter-option selected" onclick="toggleFilter('spec','commercial',this)" data-val="commercial">
+        <span class="check"></span> Commercial
+      </div>
+      <div class="filter-option" onclick="toggleFilter('spec','residential',this)" data-val="residential">
+        <span class="check"></span> Residential
+      </div>
+      <div class="filter-option" onclick="toggleFilter('spec','renovation',this)" data-val="renovation">
+        <span class="check"></span> Renovation
+      </div>
+      <div class="filter-option" onclick="toggleFilter('spec','infrastructure',this)" data-val="infrastructure">
+        <span class="check"></span> Infrastructure
+      </div>
+      <div class="filter-option" onclick="toggleFilter('spec','interior',this)" data-val="interior">
+        <span class="check"></span> Interior Design
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="filter-section">
+      <div class="filter-section-title">Location</div>
+      <div class="filter-option" onclick="toggleFilter('loc','Dubai Marina',this)"><span class="check"></span> Dubai Marina</div>
+      <div class="filter-option" onclick="toggleFilter('loc','Business Bay',this)"><span class="check"></span> Business Bay</div>
+      <div class="filter-option" onclick="toggleFilter('loc','DIFC',this)"><span class="check"></span> DIFC</div>
+      <div class="filter-option" onclick="toggleFilter('loc','JLT',this)"><span class="check"></span> JLT</div>
+      <div class="filter-option" onclick="toggleFilter('loc','Palm Jumeirah',this)"><span class="check"></span> Palm Jumeirah</div>
+      <div class="filter-option" onclick="toggleFilter('loc','Deira',this)"><span class="check"></span> Deira</div>
+    </div>
+
+    <!-- Rating -->
+    <div class="filter-section">
+      <div class="filter-section-title">Minimum Rating</div>
+      <div class="range-wrap">
+        <input type="range" id="ratingRange" min="1" max="5" step="0.5" value="4" oninput="updateRatingLabel(this)">
+        <div class="range-labels">
+          <span>1★</span><span id="ratingVal" style="color:var(--gold); font-weight:600;">4★+</span><span>5★</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verified only -->
+    <div class="filter-section">
+      <div class="filter-section-title">Status</div>
+      <div class="filter-option selected" onclick="toggleFilter('verified','true',this)">
+        <span class="check">✓</span> RTA Verified Only
+      </div>
+    </div>
+
+    <button class="clear-btn" onclick="clearFilters()">✕ Clear All Filters</button>
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results-area">
+    <div id="activeFiltersRow" class="active-filters"></div>
+
+    <div class="results-topbar">
+      <div class="results-count"><strong id="resultsNum">6</strong> companies found</div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <option value="rating">Sort: Highest Rated</option>
+          <option value="projects">Sort: Most Projects</option>
+          <option value="name">Sort: Name A-Z</option>
+          <option value="newest">Sort: Newest</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grid View">⊞</button>
+          <button class="view-btn" id="listBtn" onclick="setView('list')" title="List View">☰</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="companyResults"></div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+</div>
+
+<script>
+const ALL_COMPANIES = [
+  { id:'c1', name:'Al Fardan Construction LLC', category:'commercial', emoji:'🏢', location:'Dubai Marina', projects:47, rating:4.9, reviews:124, founded:2008, verified:true, specialties:['High-Rise','Commercial','Mixed-Use'], license:'DM-CON-2008-447', desc:'Premium commercial construction with 15+ years across Dubai and Abu Dhabi.' },
+  { id:'c2', name:'GoldenBuild Renovations', category:'renovation', emoji:'🔨', location:'Business Bay', projects:312, rating:4.8, reviews:88, founded:2014, verified:true, specialties:['Renovation','Fit-Out','Interior'], license:'DM-REN-2014-891', desc:'End-to-end renovation specialists for residential and commercial spaces.' },
+  { id:'c3', name:'Nakheel Infrastructure Partners', category:'infrastructure', emoji:'🌉', location:'Deira', projects:28, rating:5.0, reviews:41, founded:2006, verified:true, specialties:['Infrastructure','Roads','Civil'], license:'DM-INF-2006-112', desc:'Large-scale civil and infrastructure works across Dubai emirate.' },
+  { id:'c4', name:'Skyline Villas & Homes', category:'residential', emoji:'🏠', location:'Palm Jumeirah', projects:89, rating:4.7, reviews:203, founded:2011, verified:true, specialties:['Villas','Townhouses','Residential'], license:'DM-RES-2011-334', desc:'Luxury residential construction specializing in bespoke villas and townhouses.' },
+  { id:'c5', name:'Element Interiors Dubai', category:'interior', emoji:'🛋️', location:'DIFC', projects:156, rating:4.6, reviews:317, founded:2016, verified:true, specialties:['Interior Design','Fit-Out','FF&E'], license:'DM-INT-2016-779', desc:'Award-winning interior fit-out and FF&E procurement for premium projects.' },
+  { id:'c6', name:'Axis MEP Engineering', category:'commercial', emoji:'⚙️', location:'JLT', projects:71, rating:4.8, reviews:96, founded:2010, verified:true, specialties:['MEP','HVAC','Electrical'], license:'DM-MEP-2010-556', desc:'Mechanical, electrical, and plumbing specialists for commercial and industrial.' },
+  { id:'c7', name:'Dubai Fit-Out Group', category:'renovation', emoji:'🪟', location:'Business Bay', projects:204, rating:4.5, reviews:181, founded:2012, verified:true, specialties:['Fit-Out','Partitioning','Flooring'], license:'DM-FIT-2012-225', desc:'Specialist commercial fit-out contractor delivering turnkey office and retail spaces.' },
+  { id:'c8', name:'Emaar Facilities Management', category:'infrastructure', emoji:'🏛️', location:'Dubai Marina', projects:63, rating:4.7, reviews:54, founded:2003, verified:true, specialties:['FM','Maintenance','Infrastructure'], license:'DM-INF-2003-077', desc:'Comprehensive facilities management and infrastructure maintenance across UAE.' },
+  { id:'c9', name:'ArchForm Design Studio', category:'interior', emoji:'🎨', location:'DIFC', projects:92, rating:4.9, reviews:143, founded:2017, verified:true, specialties:['Architecture','Interior','3D Design'], license:'DM-ARC-2017-441', desc:'Boutique architectural and interior design studio for luxury residential and hospitality.' },
+  { id:'c10', name:'CrestBuild Residential', category:'residential', emoji:'🏡', location:'Palm Jumeirah', projects:134, rating:4.6, reviews:228, founded:2009, verified:true, specialties:['Villas','Swimming Pools','Landscaping'], license:'DM-RES-2009-198', desc:'Premium villa and luxury residential construction with full fit-out capability.' },
+  { id:'c11', name:'Urban Steel & Structures', category:'commercial', emoji:'🔩', location:'Deira', projects:39, rating:4.4, reviews:62, founded:2007, verified:true, specialties:['Structural Steel','Warehouses','Industrial'], license:'DM-STR-2007-310', desc:'Structural steel fabrication and erection for commercial and industrial builds.' },
+  { id:'c12', name:'GreenSpace Landscaping', category:'renovation', emoji:'🌿', location:'JLT', projects:280, rating:4.7, reviews:119, founded:2015, verified:true, specialties:['Landscaping','Irrigation','Outdoor'], license:'DM-GRN-2015-662', desc:'Full-service landscaping and outdoor design for residential and commercial.' },
+];
+
+let activeView = 'grid';
+let activeFilters = { specs: [], locs: [], verified: true };
+let currentPage = 1;
+const PER_PAGE = 9;
+
+function toggleFilter(type, val, el) {
+  el.classList.toggle('selected');
+  const check = el.querySelector('.check');
+  if (el.classList.contains('selected')) {
+    check.textContent = '✓';
+    if (type === 'spec') { if (!activeFilters.specs.includes(val)) activeFilters.specs.push(val); }
+    if (type === 'loc')  { if (!activeFilters.locs.includes(val))  activeFilters.locs.push(val);  }
+    if (type === 'verified') activeFilters.verified = true;
+  } else {
+    check.textContent = '';
+    if (type === 'spec') activeFilters.specs = activeFilters.specs.filter(s => s !== val);
+    if (type === 'loc')  activeFilters.locs  = activeFilters.locs.filter(l => l !== val);
+    if (type === 'verified') activeFilters.verified = false;
+  }
+  applyFilters();
+}
+
+function updateRatingLabel(el) {
+  const pct = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.setProperty('--pct', pct + '%');
+  document.getElementById('ratingVal').textContent = el.value + '★+';
+  applyFilters();
+}
+
+function clearFilters() {
+  activeFilters = { specs: [], locs: [], verified: false };
+  document.querySelectorAll('.filter-option').forEach(el => {
+    el.classList.remove('selected');
+    el.querySelector('.check').textContent = '';
+  });
+  document.getElementById('mainSearch').value = '';
+  document.getElementById('ratingRange').value = 1;
+  updateRatingLabel(document.getElementById('ratingRange'));
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('mainSearch').value.toLowerCase();
+  const minRating = parseFloat(document.getElementById('ratingRange').value);
+  const sort = document.getElementById('sortSelect').value;
+
+  let results = ALL_COMPANIES.filter(c => {
+    if (activeFilters.specs.length && !activeFilters.specs.includes(c.category)) return false;
+    if (activeFilters.locs.length && !activeFilters.locs.includes(c.location)) return false;
+    if (activeFilters.verified && !c.verified) return false;
+    if (c.rating < minRating) return false;
+    if (q && !c.name.toLowerCase().includes(q) && !c.desc.toLowerCase().includes(q) && !c.location.toLowerCase().includes(q) && !c.specialties.some(s => s.toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  if (sort === 'rating')   results.sort((a,b) => b.rating - a.rating);
+  if (sort === 'projects') results.sort((a,b) => b.projects - a.projects);
+  if (sort === 'name')     results.sort((a,b) => a.name.localeCompare(b.name));
+  if (sort === 'newest')   results.sort((a,b) => b.founded - a.founded);
+
+  document.getElementById('resultsNum').textContent = results.length;
+  currentPage = 1;
+  renderResults(results);
+  renderPagination(results.length);
+  renderActiveTags();
+}
+
+function renderResults(results) {
+  const container = document.getElementById('companyResults');
+  const start = (currentPage - 1) * PER_PAGE;
+  const page = results.slice(start, start + PER_PAGE);
+
+  if (!page.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>No companies found</h3><p>Try adjusting your filters or search terms.</p></div>`;
+    return;
+  }
+
+  if (activeView === 'grid') {
+    container.className = 'companies-grid';
+    container.innerHTML = page.map(c => `
+      <a class="company-card" href="company-profile.html?id=${c.id}" onclick="sessionStorage.setItem('viewingCompany','${c.id}')">
+        <div class="card-thumb">
+          <span>${c.emoji}</span>
+          ${c.verified ? '<span class="v-badge">✓ Verified</span>' : ''}
+          <span class="pc-badge">${c.projects} projects</span>
+        </div>
+        <div class="card-body">
+          <div class="card-name">${c.name}</div>
+          <div class="card-meta"><span>📍 ${c.location}</span><span>📅 Est. ${c.founded}</span></div>
+          <div class="specs">${c.specialties.map(s=>`<span class="spec">${s}</span>`).join('')}</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-rating"><span class="star">★</span> ${c.rating} <span style="color:var(--text-muted);font-weight:400;">(${c.reviews})</span></div>
+          <span style="font-size:12px;color:var(--gold);font-weight:600;">View →</span>
+        </div>
+      </a>
+    `).join('');
+  } else {
+    container.className = 'companies-list';
+    container.innerHTML = page.map(c => `
+      <a class="company-list-item" href="company-profile.html?id=${c.id}" onclick="sessionStorage.setItem('viewingCompany','${c.id}')">
+        <div class="list-emoji">${c.emoji}</div>
+        <div class="list-info">
+          <div class="list-name">${c.name}</div>
+          <div class="list-meta">
+            <span>📍 ${c.location}</span>
+            <span>📅 Est. ${c.founded}</span>
+            <span>🪪 ${c.license}</span>
+          </div>
+          <div class="specs" style="margin-top:8px;">${c.specialties.map(s=>`<span class="spec">${s}</span>`).join('')}</div>
+        </div>
+        <div class="list-right">
+          <div class="list-rating"><span class="star">★</span> ${c.rating}</div>
+          <div class="list-projects">${c.projects} projects</div>
+          ${c.verified ? '<span class="badge badge-green" style="margin-top:6px;">✓ Verified</span>' : ''}
+        </div>
+      </a>
+    `).join('');
+  }
+}
+
+function renderPagination(total) {
+  const pages = Math.ceil(total / PER_PAGE);
+  const container = document.getElementById('pagination');
+  if (pages <= 1) { container.innerHTML=''; return; }
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i=1; i<=pages; i++) html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  container.innerHTML = html;
+}
+
+function goPage(p) {
+  if (p < 1) return;
+  currentPage = p;
+  applyFilters();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderActiveTags() {
+  const row = document.getElementById('activeFiltersRow');
+  let tags = [];
+  activeFilters.specs.forEach(s => tags.push({ label: s, remove: () => { activeFilters.specs = activeFilters.specs.filter(x=>x!==s); applyFilters(); } }));
+  activeFilters.locs.forEach(l => tags.push({ label: l, remove: () => { activeFilters.locs = activeFilters.locs.filter(x=>x!==l); applyFilters(); } }));
+  row.innerHTML = tags.map((t,i) => `<span class="active-filter-tag">${t.label} <button onclick="removeTag(${i})">×</button></span>`).join('');
+  window._tagRemovers = tags.map(t => t.remove);
+}
+
+function removeTag(i) { window._tagRemovers[i](); }
+
+function setView(v) {
+  activeView = v;
+  document.getElementById('gridBtn').classList.toggle('active', v==='grid');
+  document.getElementById('listBtn').classList.toggle('active', v==='list');
+  applyFilters();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('ratingRange').style.setProperty('--pct','75%');
+  applyFilters();
+});
+</script>
+</body>
+</html>
