@@ -1,374 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard — Chiaro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --gold: #C9A84C;
-      --gold-light: #E8C97A;
-      --gold-dim: rgba(201,168,76,0.15);
-      --bg: #0A0A0B;
-      --bg2: #111114;
-      --bg3: #18181D;
-      --surface: #1E1E25;
-      --border: rgba(255,255,255,0.07);
-      --text: #F0EDE6;
-      --text-muted: #8A8880;
-      --red: #E05252;
-      --green: #52C07A;
-      --blue: #52A0E0;
+      --gold:#C9A84C; --gold-light:#E8C97A; --gold-dim:rgba(201,168,76,0.13);
+      --gold-border:rgba(201,168,76,0.3);
+      --bg:#0A0A0B; --bg2:#111114; --bg3:#18181D; --surface:#1E1E25; --surface2:#26262F;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+      --text:#F0EDE6; --text-sub:#C4C0B8; --text-muted:#8A8880;
+      --red:#E05252; --green:#52C07A; --blue:#52A0E0;
+      --green-dim:rgba(82,192,122,0.12); --red-dim:rgba(224,82,82,0.12); --blue-dim:rgba(82,160,224,0.12);
+      --r:6px; --r2:12px; --r3:16px;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-    /* LAYOUT */
-    .layout { display: flex; min-height: 100vh; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+    ::-webkit-scrollbar{width:5px;height:5px;}
+    ::-webkit-scrollbar-track{background:var(--bg2);}
+    ::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:10px;}
+    ::selection{background:var(--gold-dim);color:var(--gold-light);}
 
-    /* SIDEBAR */
-    .sidebar {
-      width: 240px;
-      background: var(--bg2);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 28px 0;
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
-      z-index: 50;
-    }
-    .sidebar-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      padding: 0 24px 28px;
-      text-decoration: none;
-      color: var(--text);
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 20px;
-      display: block;
-    }
-    .sidebar-logo span { color: var(--gold); }
+    /* ── LAYOUT ── */
+    .layout{display:flex;min-height:100vh;}
 
-    .sidebar-section {
-      padding: 0 12px;
-      margin-bottom: 8px;
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:248px;background:var(--bg2);border-right:1px solid var(--border);
+      display:flex;flex-direction:column;padding:0;
+      position:fixed;top:0;left:0;bottom:0;z-index:50;
     }
-    .sidebar-section-label {
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-muted);
-      padding: 0 12px;
-      margin-bottom: 6px;
-      margin-top: 16px;
+    .sb-logo{
+      font-family:'Syne',sans-serif;font-size:20px;font-weight:800;
+      padding:22px 24px 20px;text-decoration:none;color:var(--text);
+      border-bottom:1px solid var(--border);display:block;letter-spacing:-0.3px;
     }
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.15s;
-      cursor: pointer;
-      border: none;
-      background: none;
-      width: 100%;
-      font-family: 'DM Sans', sans-serif;
+    .sb-logo span{color:var(--gold);}
+    .sb-section{padding:16px 12px 0;}
+    .sb-label{
+      font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;
+      color:var(--text-muted);padding:0 12px;margin-bottom:5px;margin-top:12px;display:block;
     }
-    .sidebar-link:hover { background: var(--surface); color: var(--text); }
-    .sidebar-link.active { background: var(--gold-dim); color: var(--gold); }
-    .sidebar-link .icon { font-size: 16px; width: 20px; text-align: center; }
+    .sb-link{
+      display:flex;align-items:center;gap:10px;
+      padding:9px 12px;border-radius:var(--r2);
+      color:var(--text-muted);text-decoration:none;font-size:14px;font-weight:500;
+      transition:all 0.15s;cursor:pointer;border:none;background:none;
+      width:100%;font-family:'DM Sans',sans-serif;text-align:left;
+    }
+    .sb-link:hover{background:var(--surface);color:var(--text);}
+    .sb-link.active{background:var(--gold-dim);color:var(--gold);}
+    .sb-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0;}
+    .sb-badge{
+      margin-left:auto;background:var(--red);color:#fff;
+      font-size:10px;font-weight:700;padding:1px 6px;border-radius:100px;min-width:18px;text-align:center;
+    }
+    .sb-bottom{
+      margin-top:auto;padding:14px 12px;border-top:1px solid var(--border);
+    }
+    .user-pill{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:var(--r2);background:var(--surface);
+      cursor:pointer;transition:background 0.15s;
+    }
+    .user-pill:hover{background:var(--surface2);}
+    .user-av{
+      width:34px;height:34px;border-radius:50%;background:var(--gold);
+      display:flex;align-items:center;justify-content:center;
+      font-size:14px;font-weight:800;color:#0A0A0B;
+      font-family:'Syne',sans-serif;flex-shrink:0;
+    }
+    .user-name{font-size:13px;font-weight:600;}
+    .user-type{font-size:11px;color:var(--text-muted);}
 
-    .sidebar-bottom {
-      margin-top: auto;
-      padding: 16px 12px;
-      border-top: 1px solid var(--border);
-    }
-    .user-pill {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 8px;
-      background: var(--surface);
-    }
-    .user-avatar {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      background: var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      color: #0A0A0B;
-      font-family: 'Syne', sans-serif;
-    }
-    .user-name { font-size: 13px; font-weight: 600; }
-    .user-type { font-size: 11px; color: var(--text-muted); }
+    /* ── MAIN ── */
+    .main{margin-left:248px;flex:1;padding:36px 40px 60px;max-width:calc(100vw - 248px);}
 
-    /* MAIN */
-    .main {
-      margin-left: 240px;
-      flex: 1;
-      padding: 40px 40px;
-      max-width: calc(100vw - 240px);
-    }
+    /* ── TOPBAR ── */
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:16px;flex-wrap:wrap;}
+    .page-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-0.5px;}
+    .page-title span{color:var(--gold);}
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 36px;
+    /* ── BUTTONS ── */
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:7px;
+      padding:9px 20px;border-radius:var(--r);font-family:'DM Sans',sans-serif;
+      font-size:14px;font-weight:500;cursor:pointer;transition:all 0.2s;
+      border:none;text-decoration:none;white-space:nowrap;
     }
-    .page-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .page-title span { color: var(--gold); }
+    .btn-gold{background:var(--gold);color:#0A0A0B;font-weight:600;}
+    .btn-gold:hover{background:var(--gold-light);box-shadow:0 6px 20px rgba(201,168,76,0.25);}
+    .btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-muted);}
+    .btn-ghost:hover{border-color:var(--border2);color:var(--text);}
+    .btn-danger{background:var(--red-dim);border:1px solid rgba(224,82,82,0.3);color:var(--red);}
+    .btn-danger:hover{background:rgba(224,82,82,0.2);}
+    .btn-green{background:var(--green-dim);border:1px solid rgba(82,192,122,0.3);color:var(--green);}
+    .btn-green:hover{background:rgba(82,192,122,0.2);}
+    .btn-sm{padding:6px 13px;font-size:12px;}
+    .btn-lg{padding:12px 26px;font-size:15px;}
+    .btn-full{width:100%;justify-content:center;}
 
-    /* STATS ROW */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 32px;
-    }
-    .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 22px;
-      transition: border-color 0.2s;
-    }
-    .stat-card:hover { border-color: rgba(201,168,76,0.2); }
-    .stat-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
-    .stat-value {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--text);
-    }
-    .stat-delta {
-      font-size: 12px;
-      color: var(--green);
-      margin-top: 4px;
-    }
+    /* ── TABS ── */
+    .dash-tab{display:none;}
+    .dash-tab.active{display:block;}
 
-    /* SECTION */
-    .section { margin-bottom: 32px; }
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 18px;
-      font-weight: 700;
-    }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 9px 18px;
-      border-radius: 6px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s; border: none; text-decoration: none;
-    }
-    .btn-gold { background: var(--gold); color: #0A0A0B; font-weight: 600; }
-    .btn-gold:hover { background: var(--gold-light); }
-    .btn-ghost { background: none; border: 1px solid var(--border); color: var(--text-muted); }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
-    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    /* ── STATS GRID ── */
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:18px 20px;transition:border-color 0.2s;}
+    .stat-card:hover{border-color:var(--border2);}
+    .stat-label{font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:7px;}
+    .stat-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;}
+    .stat-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
 
-    /* TABLE */
-    .table-wrap {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    table { width: 100%; border-collapse: collapse; }
-    thead th {
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-muted);
-      background: var(--bg3);
-      border-bottom: 1px solid var(--border);
-    }
-    tbody td {
-      padding: 14px 16px;
-      font-size: 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-    }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    /* ── CARD ── */
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:22px;margin-bottom:16px;}
+    .card-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:16px;}
+    .card:hover{border-color:var(--border2);}
 
-    .badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 100px;
-      font-size: 11px;
-      font-weight: 600;
+    /* ── TABLE ── */
+    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;margin-bottom:16px;}
+    table{width:100%;border-collapse:collapse;}
+    thead th{padding:11px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);background:var(--bg3);border-bottom:1px solid var(--border);}
+    tbody td{padding:13px 16px;font-size:14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover{background:rgba(255,255,255,0.015);}
+    tbody tr.clickable{cursor:pointer;}
+    tbody tr.clickable:hover td:first-child{color:var(--gold);}
+
+    /* ── BADGE ── */
+    .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:100px;font-size:11px;font-weight:600;}
+    .badge-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(82,192,122,0.25);}
+    .badge-gold{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border);}
+    .badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(82,160,224,0.25);}
+    .badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(224,82,82,0.25);}
+    .badge-muted{background:var(--surface);color:var(--text-muted);border:1px solid var(--border);}
+
+    /* ── PROGRESS ── */
+    .prog-wrap{height:4px;border-radius:100px;background:var(--bg3);overflow:hidden;display:inline-block;width:100px;}
+    .prog-fill{height:100%;border-radius:100px;background:var(--gold);transition:width 0.5s;}
+    .prog-fill.green{background:var(--green);}
+
+    /* ── FORM ── */
+    .form-group{margin-bottom:14px;}
+    .form-group label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+    .form-group input,.form-group select,.form-group textarea{
+      width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;
+      padding:10px 13px;outline:none;transition:border-color 0.2s;
     }
-    .badge-green { background: rgba(82,192,122,0.12); color: var(--green); border: 1px solid rgba(82,192,122,0.25); }
-    .badge-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
-    .badge-blue { background: rgba(82,160,224,0.12); color: var(--blue); border: 1px solid rgba(82,160,224,0.25); }
-    .badge-red { background: rgba(224,82,82,0.12); color: var(--red); border: 1px solid rgba(224,82,82,0.25); }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(201,168,76,0.5);}
+    .form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-muted);}
+    .form-group select option{background:var(--bg2);}
+    .form-group textarea{min-height:90px;resize:vertical;line-height:1.5;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
 
-    /* GRID 2COL */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    /* ── GRID 2 ── */
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
 
-    /* CARD */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+    /* ── UPLOAD ZONE ── */
+    .upload-zone{
+      border:2px dashed var(--border);border-radius:var(--r2);padding:28px 20px;
+      text-align:center;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;
     }
-    .card-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .upload-zone:hover,.upload-zone.dragover{border-color:var(--gold-border);background:var(--gold-dim);}
+    .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .upload-zone .uz-icon{font-size:28px;margin-bottom:8px;}
+    .upload-zone p{font-size:13px;color:var(--text-muted);line-height:1.5;}
+    .upload-zone strong{color:var(--gold);}
 
-    /* PROJECT CARD */
-    .project-item {
-      display: flex; align-items: center; gap: 14px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
+    /* ── FILE LIST ── */
+    .file-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;}
+    .file-item{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 13px;background:var(--bg3);border-radius:var(--r);
+      border:1px solid var(--border);transition:border-color 0.2s;
     }
-    .project-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .project-emoji { font-size: 28px; }
-    .project-info { flex: 1; }
-    .project-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-    .project-sub { font-size: 12px; color: var(--text-muted); }
+    .file-item:hover{border-color:var(--border2);}
+    .file-icon{font-size:18px;flex-shrink:0;}
+    .file-name{flex:1;font-size:13px;font-weight:500;}
+    .file-size{font-size:11px;color:var(--text-muted);}
+    .file-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;}
+    .file-remove{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:2px 4px;border-radius:4px;transition:color 0.15s;}
+    .file-remove:hover{color:var(--red);}
 
-    /* PROGRESS BAR */
-    .progress-bar {
-      height: 4px; border-radius: 100px;
-      background: var(--bg3); overflow: hidden; margin-top: 6px;
+    /* ── NOTIFICATIONS ── */
+    .notif-list{display:flex;flex-direction:column;}
+    .notif-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);}
+    .notif-item:last-child{border-bottom:none;}
+    .notif-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px;}
+    .notif-text{font-size:13px;line-height:1.5;}
+    .notif-time{font-size:11px;color:var(--text-muted);margin-top:3px;}
+
+    /* ── PROJECT CARDS (dashboard grid) ── */
+    .project-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+    .proj-card{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);
+      overflow:hidden;cursor:pointer;transition:all 0.25s;
     }
-    .progress-fill {
-      height: 100%; border-radius: 100px;
-      background: var(--gold);
-      transition: width 0.4s;
+    .proj-card:hover{border-color:var(--gold-border);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,0.35);}
+    .proj-card-header{
+      height:90px;display:flex;align-items:center;justify-content:center;
+      font-size:40px;position:relative;
     }
-
-    /* NOTIFICATION */
-    .notif-item {
-      display: flex; gap: 12px; padding: 10px 0;
-      border-bottom: 1px solid var(--border);
+    .proj-card-body{padding:14px 16px;}
+    .proj-card-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px;}
+    .proj-card-meta{font-size:12px;color:var(--text-muted);margin-bottom:10px;}
+    .proj-card-footer{
+      padding:11px 16px;border-top:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;
     }
-    .notif-item:last-child { border-bottom: none; }
-    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); margin-top: 6px; flex-shrink: 0; }
-    .notif-text { font-size: 13px; line-height: 1.5; }
-    .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .proj-val{font-size:13px;font-weight:600;color:var(--gold);}
 
-    /* TABS */
-    .dash-tabs { display: none; }
-    .dash-tab-content { display: none; }
-    .dash-tab-content.active { display: block; }
-
-    /* FORM UPLOAD */
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: 10px;
-      padding: 40px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
+    /* ── DOCUMENT ROWS ── */
+    .doc-row{
+      display:flex;align-items:center;gap:14px;
+      padding:13px 0;border-bottom:1px solid var(--border);
     }
-    .upload-zone:hover { border-color: rgba(201,168,76,0.4); background: var(--gold-dim); }
-    .upload-zone .icon { font-size: 36px; margin-bottom: 12px; }
-    .upload-zone p { color: var(--text-muted); font-size: 14px; }
-    .upload-zone strong { color: var(--gold); }
+    .doc-row:last-child{border-bottom:none;}
+    .doc-icon{font-size:20px;width:32px;text-align:center;flex-shrink:0;}
+    .doc-info{flex:1;}
+    .doc-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+    .doc-meta{font-size:12px;color:var(--text-muted);}
+    .doc-actions{display:flex;gap:8px;flex-shrink:0;}
 
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif;
-      font-size: 14px; padding: 11px 14px; outline: none; transition: border-color 0.2s;
+    /* ── FEE BREAKDOWN ── */
+    .fee-box{
+      background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);
+      padding:13px 15px;font-size:13px;
     }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: rgba(201,168,76,0.5); }
-    .form-group textarea { min-height: 100px; resize: vertical; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fee-row{display:flex;justify-content:space-between;padding:5px 0;}
+    .fee-row.total{border-top:1px solid var(--border);margin-top:5px;padding-top:10px;font-weight:700;}
 
-    @media (max-width: 900px) {
-      .sidebar { display: none; }
-      .main { margin-left: 0; max-width: 100vw; padding: 20px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .grid-2 { grid-template-columns: 1fr; }
+    /* ── INFO ROWS ── */
+    .info-rows{}
+    .info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+    .info-row:last-child{border-bottom:none;}
+    .info-lbl{color:var(--text-muted);}
+    .info-val{font-weight:600;text-align:right;}
+
+    /* ── ALERT ── */
+    .alert{padding:10px 14px;border-radius:var(--r);font-size:13px;margin-bottom:14px;display:none;}
+    .alert.show{display:block;}
+    .alert-error{background:var(--red-dim);border:1px solid rgba(224,82,82,0.3);color:var(--red);}
+    .alert-success{background:var(--green-dim);border:1px solid rgba(82,192,122,0.3);color:var(--green);}
+    .alert-info{background:var(--blue-dim);border:1px solid rgba(82,160,224,0.3);color:var(--blue);}
+
+    /* ── MODAL ── */
+    .modal-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);
+      z-index:200;display:flex;align-items:center;justify-content:center;
+      padding:20px;opacity:0;pointer-events:none;transition:opacity 0.22s;
+    }
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal-box{
+      background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+      width:100%;max-width:560px;padding:36px;position:relative;
+      transform:translateY(18px);transition:transform 0.22s;
+      max-height:90vh;overflow-y:auto;
+    }
+    .modal-overlay.open .modal-box{transform:translateY(0);}
+    .modal-close{
+      position:absolute;top:18px;right:18px;background:var(--surface);
+      border:1px solid var(--border);color:var(--text-muted);
+      width:30px;height:30px;border-radius:var(--r);cursor:pointer;
+      font-size:15px;display:flex;align-items:center;justify-content:center;
+      transition:all 0.15s;
+    }
+    .modal-close:hover{color:var(--text);border-color:var(--border2);}
+    .modal-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;padding-right:28px;}
+    .modal-sub{font-size:14px;color:var(--text-muted);margin-bottom:22px;}
+
+    /* ── E-SIGN PAD ── */
+    .sign-pad-wrap{
+      border:1px solid var(--border);border-radius:var(--r);overflow:hidden;
+      background:var(--bg3);margin-bottom:12px;
+    }
+    canvas#signCanvas{display:block;cursor:crosshair;touch-action:none;}
+    .sign-tools{display:flex;gap:8px;padding:8px 12px;border-top:1px solid var(--border);}
+
+    /* ── STEP PROGRESS ── */
+    .step-row{display:flex;gap:0;margin-bottom:28px;}
+    .step-num{
+      width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:700;font-family:'Syne',sans-serif;flex-shrink:0;
+      background:var(--surface);border:1px solid var(--border);color:var(--text-muted);transition:all 0.3s;
+    }
+    .step-num.done{background:var(--green);color:#0A0A0B;border-color:var(--green);}
+    .step-num.active{background:var(--gold);color:#0A0A0B;border-color:var(--gold);}
+    .step-line{flex:1;height:1px;background:var(--border);margin:14px 0;}
+
+    /* ── PROFILE VERIFICATION ── */
+    .verif-item{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:11px 14px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);
+      margin-bottom:8px;font-size:13px;
+    }
+    .verif-label{display:flex;align-items:center;gap:8px;}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){
+      .sidebar{display:none;}
+      .main{margin-left:0;max-width:100vw;padding:20px 16px 40px;}
+      .stats-row{grid-template-columns:1fr 1fr;}
+      .grid-2,.form-row{grid-template-columns:1fr;}
+      .grid-3,.form-row-3{grid-template-columns:1fr;}
+    }
+    @media(max-width:600px){
+      .stats-row{grid-template-columns:1fr;}
+      .project-cards-grid{grid-template-columns:1fr;}
     }
   </style>
 </head>
 <body>
 
 <div class="layout">
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <a href="index.html" class="sidebar-logo">Chi<span>aro</span></a>
 
-    <div class="sidebar-section">
-      <button class="sidebar-link active" onclick="showTab('overview', this)">
-        <span class="icon">📊</span> Overview
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar" id="sidebar">
+    <a href="../index.html" class="sb-logo">Chiaro<span>.</span></a>
+
+    <div class="sb-section">
+      <button class="sb-link active" data-tab="overview" onclick="nav(this)">
+        <span class="sb-icon">📊</span> Overview
       </button>
-      <button class="sidebar-link" onclick="showTab('companies', this)">
-        <span class="icon">🔍</span> Find Companies
+      <button class="sb-link" data-tab="requests" onclick="nav(this)">
+        <span class="sb-icon">📋</span> Project Requests
+        <span class="sb-badge" id="requestBadge">3</span>
       </button>
-      <button class="sidebar-link" onclick="showTab('requests', this)">
-        <span class="icon">📋</span> My Requests
+      <button class="sb-link" data-tab="search" onclick="window.location.href='search.html'">
+        <span class="sb-icon">🔍</span> Find Companies
       </button>
     </div>
 
-    <div class="sidebar-section-label">My Company</div>
-    <div class="sidebar-section" id="companyNav">
-      <button class="sidebar-link" onclick="showTab('projects', this)">
-        <span class="icon">🏗️</span> My Projects
+    <span class="sb-label">My Company</span>
+    <div class="sb-section">
+      <button class="sb-link" data-tab="projects" onclick="nav(this)">
+        <span class="sb-icon">🏗️</span> My Projects
       </button>
-      <button class="sidebar-link" onclick="showTab('upload', this)">
-        <span class="icon">📐</span> Upload Blueprint
+      <button class="sb-link" data-tab="documents" onclick="nav(this)">
+        <span class="sb-icon">📁</span> Documents & Signing
       </button>
-      <button class="sidebar-link" onclick="showTab('profile', this)">
-        <span class="icon">🏢</span> Company Profile
-      </button>    </div>
-
-    <div class="sidebar-section-label">Account</div>
-    <div class="sidebar-section">
-      <a class="sidebar-link" href="pricing.html">
-        <span class="icon">💳</span> Upgrade Plan
-      </a>
-      <button class="sidebar-link" onclick="showTab('settings', this)">
-        <span class="icon">⚙️</span> Settings
+      <button class="sb-link" data-tab="upload" onclick="nav(this)">
+        <span class="sb-icon">📐</span> Add New Project
       </button>
-      <button class="sidebar-link" onclick="handleLogout()">
-        <span class="icon">🚪</span> Sign Out
+      <button class="sb-link" data-tab="profile" onclick="nav(this)">
+        <span class="sb-icon">🏢</span> Company Profile
       </button>
     </div>
 
-    <div class="sidebar-bottom">
-      <div class="user-pill">
-        <div class="user-avatar" id="userInitial">?</div>
+    <span class="sb-label">Account</span>
+    <div class="sb-section">
+      <button class="sb-link" data-tab="settings" onclick="nav(this)">
+        <span class="sb-icon">⚙️</span> Settings
+      </button>
+      <button class="sb-link" onclick="handleLogout()">
+        <span class="sb-icon">🚪</span> Sign Out
+      </button>
+    </div>
+
+    <div class="sb-bottom">
+      <div class="user-pill" onclick="nav(document.querySelector('[data-tab=settings]'))">
+        <div class="user-av" id="userInitial">?</div>
         <div>
           <div class="user-name" id="userName">Loading...</div>
           <div class="user-type" id="userType">—</div>
@@ -377,162 +374,410 @@
     </div>
   </nav>
 
-  <!-- MAIN -->
+  <!-- ── MAIN ── -->
   <main class="main">
 
-    <!-- OVERVIEW TAB -->
-    <div class="dash-tab-content active" id="tab-overview">
+    <!-- ════════════════════════════════════════
+         TAB: OVERVIEW
+    ════════════════════════════════════════ -->
+    <div class="dash-tab active" id="tab-overview">
       <div class="topbar">
         <div class="page-title">Good morning, <span id="greetName">—</span></div>
-        <button class="btn btn-gold" onclick="showTab('requests', document.querySelector('[onclick*=requests]'))">
-          + New Request
-        </button>
+        <button class="btn btn-gold" onclick="nav(document.querySelector('[data-tab=upload]'))">+ Add Project</button>
       </div>
 
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-label">Companies Viewed</div>
-          <div class="stat-value">12</div>
-          <div class="stat-delta">↑ 3 this week</div>
+          <div class="stat-label">My Projects</div>
+          <div class="stat-val" id="ovTotalProj" style="color:var(--gold)">0</div>
+          <div class="stat-sub">All time</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Active Requests</div>
-          <div class="stat-value">3</div>
-          <div class="stat-delta">2 awaiting reply</div>
+          <div class="stat-label">Active</div>
+          <div class="stat-val" id="ovActiveProj">0</div>
+          <div class="stat-sub">In progress</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Shortlisted</div>
-          <div class="stat-value">5</div>
-          <div class="stat-delta">Updated yesterday</div>
+          <div class="stat-label">Pending Requests</div>
+          <div class="stat-val" id="ovRequests">3</div>
+          <div class="stat-sub">Awaiting reply</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Profile Complete</div>
-          <div class="stat-value" style="color:var(--gold);">72%</div>
-          <div class="stat-delta" style="color:var(--text-muted);">Add company info</div>
+          <div class="stat-label">Documents</div>
+          <div class="stat-val" id="ovDocs">0</div>
+          <div class="stat-sub">Uploaded</div>
         </div>
       </div>
 
       <div class="grid-2">
+        <!-- Recent Projects -->
         <div class="card">
-          <div class="card-title">Active Projects</div>
-          <div class="project-item">
-            <div class="project-emoji">🏢</div>
-            <div class="project-info">
-              <div class="project-name">Office Renovation — DIFC Tower 3</div>
-              <div class="project-sub">Al Fardan Construction · AED 2.4M</div>
-              <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+          <div class="card-title">Recent Projects</div>
+          <div id="ovProjectList">
+            <div style="text-align:center;padding:32px 0;color:var(--text-muted);font-size:14px;">
+              No projects yet — <button class="btn btn-ghost btn-sm" onclick="nav(document.querySelector('[data-tab=upload]'))" style="display:inline-flex">Add your first project →</button>
             </div>
-            <span class="badge badge-gold">65%</span>
-          </div>
-          <div class="project-item">
-            <div class="project-emoji">🏠</div>
-            <div class="project-info">
-              <div class="project-name">Villa Extension — Palm Jumeirah</div>
-              <div class="project-sub">Skyline Villas · AED 890K</div>
-              <div class="progress-bar"><div class="progress-fill" style="width:30%"></div></div>
-            </div>
-            <span class="badge badge-blue">30%</span>
-          </div>
-          <div class="project-item">
-            <div class="project-emoji">🛋️</div>
-            <div class="project-info">
-              <div class="project-name">Interior Fit-Out — JLT Office</div>
-              <div class="project-sub">Element Interiors · AED 340K</div>
-              <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
-            </div>
-            <span class="badge badge-green">90%</span>
           </div>
         </div>
-
+        <!-- Notifications -->
         <div class="card">
           <div class="card-title">Notifications</div>
-          <div class="notif-item">
-            <div class="notif-dot"></div>
-            <div>
-              <div class="notif-text">Al Fardan Construction replied to your quote request</div>
-              <div class="notif-time">2 hours ago</div>
-            </div>
+          <div class="notif-list">
+            <div class="notif-item"><div class="notif-dot"></div><div><div class="notif-text">Al Fardan Construction replied to your quote request</div><div class="notif-time">2 hours ago</div></div></div>
+            <div class="notif-item"><div class="notif-dot" style="background:var(--green)"></div><div><div class="notif-text">Your company profile has been verified by RTA compliance team</div><div class="notif-time">Yesterday</div></div></div>
+            <div class="notif-item"><div class="notif-dot" style="background:var(--blue)"></div><div><div class="notif-text">New blueprint review request from client — Palm Jumeirah Villa</div><div class="notif-time">2 days ago</div></div></div>
+            <div class="notif-item"><div class="notif-dot" style="background:var(--text-muted)"></div><div><div class="notif-text">Skyline Villas submitted Phase 1 completion report for signature</div><div class="notif-time">3 days ago</div></div></div>
           </div>
-          <div class="notif-item">
-            <div class="notif-dot" style="background:var(--green)"></div>
-            <div>
-              <div class="notif-text">Your account has been verified by the compliance team</div>
-              <div class="notif-time">Yesterday</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-dot" style="background:var(--blue)"></div>
-            <div>
-              <div class="notif-text">New blueprint uploaded for Palm Jumeirah Villa project</div>
-              <div class="notif-time">2 days ago</div>
-            </div>
-          </div>
-          <div class="notif-item">
-            <div class="notif-dot" style="background:var(--text-muted)"></div>
-            <div>
-              <div class="notif-text">Skyline Villas submitted Phase 1 completion report</div>
-              <div class="notif-time">3 days ago</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section" style="margin-top:24px;">
-        <div class="section-header">
-          <div class="section-title">Recent Requests</div>
-          <button class="btn btn-ghost btn-sm" onclick="showTab('requests', null)">View All</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Company</th>
-                <th>Project Type</th>
-                <th>Submitted</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Al Fardan Construction</strong></td>
-                <td>Commercial Renovation</td>
-                <td>Apr 22, 2025</td>
-                <td><span class="badge badge-green">Replied</span></td>
-                <td><button class="btn btn-ghost btn-sm">View</button></td>
-              </tr>
-              <tr>
-                <td><strong>GoldenBuild Renovations</strong></td>
-                <td>Office Fit-Out</td>
-                <td>Apr 19, 2025</td>
-                <td><span class="badge badge-gold">Pending</span></td>
-                <td><button class="btn btn-ghost btn-sm">View</button></td>
-              </tr>
-              <tr>
-                <td><strong>Element Interiors</strong></td>
-                <td>Interior Design</td>
-                <td>Apr 15, 2025</td>
-                <td><span class="badge badge-blue">In Review</span></td>
-                <td><button class="btn btn-ghost btn-sm">View</button></td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
 
-    <!-- REQUESTS TAB -->
-    <div class="dash-tab-content" id="tab-requests">
+    <!-- ════════════════════════════════════════
+         TAB: MY PROJECTS
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-projects">
       <div class="topbar">
-        <div class="page-title">My <span>Requests</span></div>
+        <div class="page-title">My <span>Projects</span></div>
+        <button class="btn btn-gold" onclick="nav(document.querySelector('[data-tab=upload]'))">+ Add New Project</button>
       </div>
 
-      <div class="card" style="margin-bottom:24px;">
-        <div class="card-title">Submit New Project Request</div>
+      <div class="stats-row" id="projStatsRow">
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-val" id="psTot" style="color:var(--gold)">0</div></div>
+        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-val" id="psAct" style="color:var(--green)">0</div></div>
+        <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" id="psComp">0</div></div>
+        <div class="stat-card"><div class="stat-label">Total Value</div><div class="stat-val" id="psVal" style="color:var(--gold);font-size:18px">AED 0</div></div>
+      </div>
+
+      <div id="projectsTableWrap">
+        <div style="text-align:center;padding:60px 0;color:var(--text-muted);">
+          <div style="font-size:40px;margin-bottom:14px;opacity:0.4">🏗️</div>
+          <div style="font-size:16px;font-weight:600;color:var(--text-sub);margin-bottom:8px;">No projects yet</div>
+          <div style="margin-bottom:20px;">Create your first project to start tracking progress and sharing with investors.</div>
+          <button class="btn btn-gold" onclick="nav(document.querySelector('[data-tab=upload]'))">+ Create First Project</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         TAB: ADD NEW PROJECT
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-upload">
+      <div class="topbar">
+        <div class="page-title">Add New <span>Project</span></div>
+      </div>
+
+      <div class="step-row" id="addStepRow">
+        <div class="step-num active" id="addStep1">1</div>
+        <div class="step-line"></div>
+        <div class="step-num" id="addStep2">2</div>
+        <div class="step-line"></div>
+        <div class="step-num" id="addStep3">3</div>
+      </div>
+
+      <!-- Step 1: Project Info -->
+      <div id="addProjStep1">
+        <div class="grid-2">
+          <div>
+            <div class="card">
+              <div class="card-title">Project Information</div>
+              <div class="form-group">
+                <label>Project Name *</label>
+                <input type="text" id="pName" placeholder="e.g. Horizon Tower Phase 2" />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Project Type *</label>
+                  <select id="pType">
+                    <option value="">— Select —</option>
+                    <option>Commercial Construction</option>
+                    <option>Residential Build</option>
+                    <option>Renovation & Fit-Out</option>
+                    <option>Infrastructure & Civil</option>
+                    <option>Interior Design</option>
+                    <option>MEP Engineering</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Status</label>
+                  <select id="pStatus">
+                    <option value="planning">Planning</option>
+                    <option value="active">Active / In Progress</option>
+                    <option value="complete">Completed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Location *</label>
+                <input type="text" id="pLocation" placeholder="Dubai Marina, Business Bay..." />
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Start Date</label>
+                  <input type="date" id="pStart" />
+                </div>
+                <div class="form-group">
+                  <label>Target Handover</label>
+                  <input type="date" id="pEnd" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Client / Developer</label>
+                <input type="text" id="pClient" placeholder="Private Client / Nakheel..." />
+              </div>
+              <div class="form-group">
+                <label>Total Floors (0 = non-building)</label>
+                <input type="number" id="pFloors" placeholder="0" min="0" max="200" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Completed Floors</label>
+                <input type="number" id="pFloorsComp" placeholder="0" min="0" value="0" />
+              </div>
+              <div class="form-group">
+                <label>Progress % (0–100)</label>
+                <input type="number" id="pProgress" placeholder="0" min="0" max="100" value="0" />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <div class="card-title">Contract & Value</div>
+              <div class="form-group">
+                <label>Contract Value (AED) *</label>
+                <input type="number" id="pValue" placeholder="e.g. 5000000" min="0" oninput="recalcFee()" />
+              </div>
+              <div class="fee-box" id="feeBox" style="display:none;">
+                <div class="fee-row"><span style="color:var(--text-muted)">Contract Value</span><span id="feeContractVal" style="font-weight:600">AED 0</span></div>
+                <div class="fee-row"><span style="color:var(--red)">Platform Fee (0.2%)</span><span id="feePlatformFee" style="color:var(--red);font-weight:600">− AED 0</span></div>
+                <div class="fee-row total"><span>Your Net Value</span><span id="feeNetVal" style="color:var(--gold)">AED 0</span></div>
+              </div>
+              <div class="form-group" style="margin-top:12px;">
+                <label>Project Description</label>
+                <textarea id="pDesc" placeholder="Describe the project scope, location details, key deliverables and specifications..."></textarea>
+              </div>
+              <div class="form-group">
+                <label>Visibility</label>
+                <select id="pVisibility">
+                  <option value="public">Public — All registered users</option>
+                  <option value="clients">Verified clients only</option>
+                  <option value="private">Private (invite only)</option>
+                  <option value="government">RTA / Government only</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Emoji / Icon</label>
+                <select id="pEmoji">
+                  <option value="🏢">🏢 Commercial Tower</option>
+                  <option value="🏠">🏠 Residential Villa</option>
+                  <option value="🏗️">🏗️ Under Construction</option>
+                  <option value="🌉">🌉 Infrastructure</option>
+                  <option value="🛋️">🛋️ Interior Fit-Out</option>
+                  <option value="⚙️">⚙️ MEP Engineering</option>
+                  <option value="🏥">🏥 Healthcare</option>
+                  <option value="🏫">🏫 Education</option>
+                  <option value="🏨">🏨 Hospitality</option>
+                  <option value="🏪">🏪 Retail</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;" onclick="addProjNext1()">Continue — Upload Blueprints →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Documents -->
+      <div id="addProjStep2" style="display:none;">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Upload Blueprints & Documents</div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Upload architectural drawings, structural plans, BOQ, completion certificates. PDF, DWG, JPG, PNG — up to 100MB each.</p>
+            <div class="upload-zone" id="blueprintDropZone">
+              <input type="file" id="blueprintFiles" multiple accept=".pdf,.dwg,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileSelect(this,'blueprintList','blueprintItems')" />
+              <div class="uz-icon">📐</div>
+              <p><strong>Click to upload or drag & drop</strong></p>
+              <p>PDF, DWG, PNG, JPG, DOCX — max 100MB</p>
+            </div>
+            <div class="file-list" id="blueprintList"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Quality & Compliance Certificates</div>
+            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Upload material certificates (like the ones you provided), inspection acts, DM approvals, RTA sign-offs.</p>
+            <div class="upload-zone" id="certDropZone">
+              <input type="file" id="certFiles" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this,'certList','certItems')" />
+              <div class="uz-icon">📜</div>
+              <p><strong>Click to upload certificates</strong></p>
+              <p>Inspection acts, quality passports, DM approvals</p>
+            </div>
+            <div class="file-list" id="certList"></div>
+            <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border);font-size:12px;color:var(--text-muted);">
+              💡 Based on your uploaded PDF: documents like wall plastering acts (Акт освидетельствования), quality passports from Invento, Michaylovcement, Traidor etc. all belong here.
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;margin-top:4px;">
+          <button class="btn btn-ghost btn-lg" onclick="addProjBack1()">← Back</button>
+          <button class="btn btn-gold btn-lg" style="flex:1;justify-content:center;" onclick="addProjNext2()">Continue — Review & Publish →</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Review -->
+      <div id="addProjStep3" style="display:none;">
+        <div class="card">
+          <div class="card-title">Review & Confirm</div>
+          <div id="projReviewContent"></div>
+          <div style="display:flex;gap:12px;margin-top:20px;">
+            <button class="btn btn-ghost btn-lg" onclick="addProjBack2()">← Back</button>
+            <button class="btn btn-gold btn-lg" style="flex:1;justify-content:center;" id="publishBtn" onclick="publishProject()">✓ Publish Project</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         TAB: DOCUMENTS & SIGNING
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-documents">
+      <div class="topbar">
+        <div class="page-title">Documents & <span>E-Signing</span></div>
+        <button class="btn btn-gold" onclick="openUploadDocModal()">+ Upload Document</button>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-title">Pending Signatures</div>
+          <div id="pendingSignList">
+            <div class="doc-row">
+              <div class="doc-icon">📋</div>
+              <div class="doc-info">
+                <div class="doc-name">Act of Hidden Works — Wall Plastering B1–B3</div>
+                <div class="doc-meta">Uploaded May 01, 2025 · Skyline Villas Project</div>
+              </div>
+              <div class="doc-actions">
+                <span class="badge badge-red">Awaiting Signature</span>
+                <button class="btn btn-gold btn-sm" onclick="openEsignModal('Act of Hidden Works — Wall Plastering B1–B3')">Sign</button>
+              </div>
+            </div>
+            <div class="doc-row">
+              <div class="doc-icon">📐</div>
+              <div class="doc-info">
+                <div class="doc-name">Structural Blueprint — Tower Core Floors 1–13</div>
+                <div class="doc-meta">Uploaded Apr 28, 2025 · Horizon Tower Project</div>
+              </div>
+              <div class="doc-actions">
+                <span class="badge badge-gold">Review Required</span>
+                <button class="btn btn-gold btn-sm" onclick="openEsignModal('Structural Blueprint — Tower Core Floors 1–13')">Sign</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-title">Document Stats</div>
+          <div class="info-rows">
+            <div class="info-row"><span class="info-lbl">Total Documents</span><span class="info-val" id="docTotalCount">0</span></div>
+            <div class="info-row"><span class="info-lbl">Signed & Verified</span><span class="info-val" style="color:var(--green);" id="docSignedCount">0</span></div>
+            <div class="info-row"><span class="info-lbl">Pending Signature</span><span class="info-val" style="color:var(--red);" id="docPendingCount">2</span></div>
+            <div class="info-row"><span class="info-lbl">DM Approved</span><span class="info-val" style="color:var(--green);">3</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Library -->
+      <div class="card">
+        <div class="card-title">Document Library</div>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm active-filter" onclick="filterDocs('all',this)">All Documents</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterDocs('blueprint',this)">Blueprints</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterDocs('certificate',this)">Certificates</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterDocs('act',this)">Inspection Acts</button>
+          <button class="btn btn-ghost btn-sm" onclick="filterDocs('contract',this)">Contracts</button>
+        </div>
+        <div id="docLibrary">
+          <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;">
+            <div style="font-size:36px;margin-bottom:12px;opacity:0.4">📁</div>
+            No documents uploaded yet. Upload your first document above.
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-loaded sample docs from the PDF you uploaded -->
+      <div class="card">
+        <div class="card-title">Registry No. 03-St — Akadem Palace Underground Parking</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px;">Based on your uploaded registry document. These are the certified hidden works acts for wall plastering and floor finishing in underground parking levels B1–B3.</p>
+        <div>
+          <div class="doc-row">
+            <div class="doc-icon">✅</div>
+            <div class="doc-info">
+              <div class="doc-name">AOSR №AP/01/24/ШТС — Wall Plastering B1-B2-B3 (3,330.91 m²)</div>
+              <div class="doc-meta">Date: 22.01.2024 · Contractor: ФЛЭТ и Ко · Inspector: Ульянов А.А.</div>
+            </div>
+            <div class="doc-actions">
+              <span class="badge badge-green">Signed & Verified</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewDoc('AOSR AP-01-24-SHTS')">View</button>
+            </div>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon">✅</div>
+            <div class="doc-info">
+              <div class="doc-name">AOSR №AP/01/24/ШИП — Sound Insulation Floor B1-B2-B3 (1,081.44 m²)</div>
+              <div class="doc-meta">Date: 22.01.2024 · Material: Шуманет-100 Комби (Passport #22154)</div>
+            </div>
+            <div class="doc-actions">
+              <span class="badge badge-green">Signed & Verified</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewDoc('AOSR AP-01-24-SHIP')">View</button>
+            </div>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon">✅</div>
+            <div class="doc-info">
+              <div class="doc-name">AOSR №AP/01/24/АПЛ — Reinforced Film Installation (1,081.44 m²)</div>
+              <div class="doc-meta">Date: 22.01.2024 · Material: Армированная пленка 200г (Passport #4)</div>
+            </div>
+            <div class="doc-actions">
+              <span class="badge badge-green">Signed & Verified</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewDoc('AOSR AP-01-24-APL')">View</button>
+            </div>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon">✅</div>
+            <div class="doc-info">
+              <div class="doc-name">AOSR №AP/01/24/АПС — Reinforced Cement-Sand Screed (1,081.44 m²)</div>
+              <div class="doc-meta">Date: 22.01.2024 · Mix: Пескобетон В20 · Mesh: 5ВР-1 100×100 60-80mm</div>
+            </div>
+            <div class="doc-actions">
+              <span class="badge badge-green">Signed & Verified</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewDoc('AOSR AP-01-24-APS')">View</button>
+            </div>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon">✅</div>
+            <div class="doc-info">
+              <div class="doc-name">AOSR №AP/01/24/ГИП — Coating Waterproofing Floor (1,081.44 m²)</div>
+              <div class="doc-meta">Date: 22.01.2024 · Product: Ceresit CL51 · Cert: АПБ.RU.OC002/3.H.01354</div>
+            </div>
+            <div class="doc-actions">
+              <span class="badge badge-green">Signed & Verified</span>
+              <button class="btn btn-ghost btn-sm" onclick="viewDoc('AOSR AP-01-24-GIP')">View</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════
+         TAB: PROJECT REQUESTS
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-requests">
+      <div class="topbar">
+        <div class="page-title">Project <span>Requests</span></div>
+        <button class="btn btn-gold" onclick="openNewRequestModal()">+ New Request</button>
+      </div>
+
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title">Submit a New Project Request</div>
         <div class="form-row">
           <div class="form-group">
             <label>Project Type</label>
-            <select>
+            <select id="rqType">
               <option>Commercial Construction</option>
               <option>Residential Build</option>
               <option>Renovation & Fit-Out</option>
@@ -542,513 +787,46 @@
           </div>
           <div class="form-group">
             <label>Estimated Budget (AED)</label>
-            <input type="text" placeholder="e.g. 500,000" />
+            <input type="text" id="rqBudget" placeholder="e.g. 2,500,000" />
           </div>
-        </div>
-        <div class="form-group">
-          <label>Project Description</label>
-          <textarea placeholder="Describe your project — scope, location, timeline, requirements..."></textarea>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Location</label>
-            <input type="text" placeholder="Dubai Marina, Business Bay..." />
+            <input type="text" id="rqLocation" placeholder="Business Bay, JVC..." />
           </div>
           <div class="form-group">
             <label>Target Start Date</label>
-            <input type="date" />
+            <input type="date" id="rqDate" />
           </div>
         </div>
-        <button class="btn btn-gold">Submit Request</button>
-      </div>
-
-      <div class="section-title" style="margin-bottom:16px;">Past Requests</div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Ref #</th><th>Project</th><th>Company</th><th>Budget</th><th>Date</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="color:var(--text-muted); font-size:12px;">BNQ-0041</td>
-              <td>Commercial Renovation</td>
-              <td>Al Fardan Construction</td>
-              <td>AED 2.4M</td>
-              <td>Apr 22</td>
-              <td><span class="badge badge-green">Replied</span></td>
-            </tr>
-            <tr>
-              <td style="color:var(--text-muted); font-size:12px;">BNQ-0039</td>
-              <td>Office Fit-Out</td>
-              <td>GoldenBuild</td>
-              <td>AED 340K</td>
-              <td>Apr 19</td>
-              <td><span class="badge badge-gold">Pending</span></td>
-            </tr>
-            <tr>
-              <td style="color:var(--text-muted); font-size:12px;">BNQ-0035</td>
-              <td>Villa Extension</td>
-              <td>Skyline Villas</td>
-              <td>AED 890K</td>
-              <td>Apr 10</td>
-              <td><span class="badge badge-green">Accepted</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- PROJECTS TAB (for company users) -->
-    <div class="dash-tab-content" id="tab-projects">
-      <div class="topbar">
-        <div class="page-title">My <span>Projects</span></div>
-        <button class="btn btn-gold" onclick="showTab('upload', null)">+ Add Project</button>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value">47</div><div class="stat-delta">↑ 3 this year</div></div>
-        <div class="stat-card"><div class="stat-label">Active</div><div class="stat-value" style="color:var(--green)">8</div><div class="stat-delta">On schedule</div></div>
-        <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-value">39</div><div class="stat-delta">100% satisfaction</div></div>
-        <div class="stat-card"><div class="stat-label">Total Value</div><div class="stat-value" style="color:var(--gold)">AED 1.2B</div><div class="stat-delta">Lifetime</div></div>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Project Name</th><th>Client</th><th>Value (AED)</th><th>Location</th><th>Progress</th><th>Status</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Horizon Tower — Shell & Core</strong></td>
-              <td>Private Client</td>
-              <td>AED 48M</td>
-              <td>Business Bay</td>
-              <td>
-                <div class="progress-bar" style="width:120px;display:inline-block;">
-                  <div class="progress-fill" style="width:72%"></div>
-                </div>
-              </td>
-              <td><span class="badge badge-gold">Active</span></td>
-            </tr>
-            <tr>
-              <td><strong>Al Barsha Medical Center</strong></td>
-              <td>DHA</td>
-              <td>AED 120M</td>
-              <td>Al Barsha</td>
-              <td>
-                <div class="progress-bar" style="width:120px;display:inline-block;">
-                  <div class="progress-fill" style="width:100%; background:var(--green)"></div>
-                </div>
-              </td>
-              <td><span class="badge badge-green">Complete</span></td>
-            </tr>
-            <tr>
-              <td><strong>JVC Residential Complex</strong></td>
-              <td>Nakheel Properties</td>
-              <td>AED 85M</td>
-              <td>JVC</td>
-              <td>
-                <div class="progress-bar" style="width:120px;display:inline-block;">
-                  <div class="progress-fill" style="width:18%"></div>
-                </div>
-              </td>
-              <td><span class="badge badge-blue">Early Stage</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- UPLOAD BLUEPRINT TAB -->
-    <div class="dash-tab-content" id="tab-upload">
-      <div class="topbar">
-        <div class="page-title">Upload <span>Blueprint</span></div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <div class="card" style="margin-bottom:16px;">
-            <div class="card-title">Project Details</div>
-            <div class="form-group">
-              <label>Project Name</label>
-              <input type="text" placeholder="e.g. Horizon Tower Phase 2" />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Project Type</label>
-                <select>
-                  <option>Commercial</option>
-                  <option>Residential</option>
-                  <option>Infrastructure</option>
-                  <option>Interior</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Contract Value (AED)</label>
-                <input type="text" id="contractValue" placeholder="0.00" oninput="calculateDeduction()" />
-                <div id="deductionDisplay" style="margin-top:10px; display:none; background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:12px; font-size:13px;">
-                  <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="color:var(--text-muted);">Contract Value:</span>
-                    <span id="dispContractVal" style="font-weight:600;">AED 0</span>
-                  </div>
-                  <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="color:#E05252;">Platform Fee (2%):</span>
-                    <span id="dispDeduction" style="font-weight:600; color:#E05252;">- AED 0</span>
-                  </div>
-                  <div style="border-top:1px solid var(--border); padding-top:6px; display:flex; justify-content:space-between;">
-                    <span style="font-weight:600;">Net Value:</span>
-                    <span id="dispNetVal" style="font-weight:700; color:var(--gold); font-size:15px;">AED 0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Location</label>
-              <input type="text" placeholder="Dubai Marina, Business Bay..." />
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Start Date</label>
-                <input type="date" />
-              </div>
-              <div class="form-group">
-                <label>Expected Completion</label>
-                <input type="date" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Project Description</label>
-              <textarea placeholder="Brief description of scope and deliverables..."></textarea>
-            </div>
-          </div>
+        <div class="form-group">
+          <label>Project Description</label>
+          <textarea id="rqDesc" placeholder="Describe your project — scope, requirements, special considerations..."></textarea>
         </div>
-
-        <div>
-          <div class="card" style="margin-bottom:16px;">
-            <div class="card-title">Upload Documents</div>
-            <div class="upload-zone" onclick="alert('File upload will connect to your server storage in production.')">
-              <div class="icon">📐</div>
-              <p><strong>Drop blueprints & drawings here</strong></p>
-              <p>PDF, DWG, PNG, JPG — up to 100MB each</p>
-            </div>
-            <div style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg3); padding:10px 14px; border-radius:8px; font-size:13px;">
-                <span>📄 Structural_Plan_v3.pdf</span>
-                <span style="color:var(--green);">✓ Ready</span>
-              </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg3); padding:10px 14px; border-radius:8px; font-size:13px;">
-                <span>📄 Architectural_Layout.dwg</span>
-                <span style="color:var(--green);">✓ Ready</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">Visibility Settings</div>
-            <div class="form-group">
-              <label>Who can view this project?</label>
-              <select>
-                <option>All registered users</option>
-                <option>Verified clients only</option>
-                <option>Private (invite only)</option>
-                <option>Government only</option>
-              </select>
-            </div>
-            <button class="btn btn-gold" style="width:100%; justify-content:center; padding:12px;">
-              Publish Project
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- INVESTOR TAB -->
-    <div class="dash-tab-content" id="tab-investments">
-      <div class="topbar">
-        <div class="page-title">My <span>Investments</span></div>
+        <div class="alert alert-success" id="rqSuccess">✓ Request submitted! Companies will respond within 48 hours.</div>
+        <button class="btn btn-gold" onclick="submitRequest()">Submit Request</button>
       </div>
 
-      <div class="card" style="margin-bottom:24px;">
-        <div class="card-title">Active Investments</div>
-        <div class="table-wrap">
+      <div class="card">
+        <div class="card-title">My Requests History</div>
+        <div class="table-wrap" style="margin-bottom:0;">
           <table>
-            <thead>
-              <tr><th>Building / Project</th><th>Developer</th><th>Investment (AED)</th><th>Progress</th><th>Est. Completion</th><th>Status</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Emaar Skyline Tower</strong></td>
-                <td>Emaar Properties</td>
-                <td>AED 2,500,000</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;"><div style="width:72%;height:100%;background:var(--gold);border-radius:4px;"></div></div>
-                    <span style="font-size:12px;font-weight:600;color:var(--gold);">72%</span>
-                  </div>
-                </td>
-                <td>Dec 2025</td>
-                <td><span class="badge badge-gold">In Progress</span></td>
-              </tr>
-              <tr>
-                <td><strong>Binghatti Emerald</strong></td>
-                <td>Binghatti Developers</td>
-                <td>AED 1,800,000</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;"><div style="width:45%;height:100%;background:var(--blue);border-radius:4px;"></div></div>
-                    <span style="font-size:12px;font-weight:600;color:var(--blue);">45%</span>
-                  </div>
-                </td>
-                <td>Jun 2026</td>
-                <td><span class="badge badge-blue">Foundation</span></td>
-              </tr>
-              <tr>
-                <td><strong>Marina Heights Residences</strong></td>
-                <td>Select Group</td>
-                <td>AED 3,200,000</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;"><div style="width:100%;height:100%;background:var(--green);border-radius:4px;"></div></div>
-                    <span style="font-size:12px;font-weight:600;color:var(--green);">100%</span>
-                  </div>
-                </td>
-                <td>Completed</td>
-                <td><span class="badge badge-green">Delivered</span></td>
-              </tr>
+            <thead><tr><th>Ref #</th><th>Project</th><th>Budget</th><th>Submitted</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="requestsTableBody">
+              <tr><td>BNQ-0041</td><td>Commercial Renovation — DIFC</td><td>AED 2.4M</td><td>Apr 22, 2025</td><td><span class="badge badge-green">Replied</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              <tr><td>BNQ-0039</td><td>Office Fit-Out — Business Bay</td><td>AED 340K</td><td>Apr 19, 2025</td><td><span class="badge badge-gold">Pending</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+              <tr><td>BNQ-0035</td><td>Villa Extension — Palm Jumeirah</td><td>AED 890K</td><td>Apr 10, 2025</td><td><span class="badge badge-green">Accepted</span></td><td><button class="btn btn-ghost btn-sm" onclick="window.location.href='project-tracker.html?id=p4'">Track →</button></td></tr>
             </tbody>
           </table>
         </div>
       </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Investment Summary</div>
-          <div style="display:flex; flex-direction:column; gap:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Total Invested</span>
-              <span style="font-weight:700; font-size:18px; color:var(--gold);">AED 7,500,000</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Active Projects</span>
-              <span style="font-weight:700; font-size:18px;">2</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Completed</span>
-              <span style="font-weight:700; font-size:18px; color:var(--green);">1</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
-              <span style="color:var(--text-muted);">Expected ROI</span>
-              <span style="font-weight:700; font-size:18px; color:var(--gold);">+14.2%</span>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">Recent Activity</div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);margin-top:6px;flex-shrink:0;"></div>
-              <div>
-                <div style="font-size:13px;">Emaar Skyline Tower — Floor 18 structural work completed</div>
-                <div style="font-size:11px;color:var(--text-muted);">2 hours ago</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:6px;flex-shrink:0;"></div>
-              <div>
-                <div style="font-size:13px;">Binghatti Emerald — Foundation inspection passed</div>
-                <div style="font-size:11px;color:var(--text-muted);">Yesterday</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--green);margin-top:6px;flex-shrink:0;"></div>
-              <div>
-                <div style="font-size:13px;">Marina Heights — Final handover certificate issued</div>
-                <div style="font-size:11px;color:var(--text-muted);">3 days ago</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; align-items:flex-start;">
-              <div style="width:8px;height:8px;border-radius:50%;background:var(--text-muted);margin-top:6px;flex-shrink:0;"></div>
-              <div>
-                <div style="font-size:13px;">Quarterly investment report available for download</div>
-                <div style="font-size:11px;color:var(--text-muted);">1 week ago</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
-
-    <!-- CLIENT PROPERTY TAB -->
-    <div class="dash-tab-content" id="tab-myproperty">
-      <div class="topbar">
-        <div class="page-title">My <span>Property</span></div>
-      </div>
-
-      <div class="card" style="margin-bottom:24px;">
-        <div class="card-title">My Purchased Units</div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Building</th><th>Unit Type</th><th>Floor</th><th>Unit / Flat No.</th><th>Room No.</th><th>Building Status</th><th>Est. Ready</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Emaar Skyline Tower</strong></td>
-                <td>2BR Apartment</td>
-                <td>22nd Floor</td>
-                <td>Unit 2204</td>
-                <td>Room A / B</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;max-width:80px;"><div style="width:72%;height:100%;background:var(--gold);border-radius:4px;"></div></div>
-                    <span style="font-size:12px;font-weight:600;color:var(--gold);">72%</span>
-                  </div>
-                </td>
-                <td><span class="badge badge-gold">Dec 2025</span></td>
-              </tr>
-              <tr>
-                <td><strong>Marina Heights Residences</strong></td>
-                <td>1BR Apartment</td>
-                <td>15th Floor</td>
-                <td>Unit 1508</td>
-                <td>Studio</td>
-                <td>
-                  <div style="display:flex;align-items:center;gap:8px;">
-                    <div style="flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;max-width:80px;"><div style="width:100%;height:100%;background:var(--green);border-radius:4px;"></div></div>
-                    <span style="font-size:12px;font-weight:600;color:var(--green);">100%</span>
-                  </div>
-                </td>
-                <td><span class="badge badge-green">Ready</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Property Details — Emaar Skyline Tower</div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Developer</span>
-              <span style="font-weight:600;">Emaar Properties</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Location</span>
-              <span style="font-weight:600;">Dubai Marina</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Unit Size</span>
-              <span style="font-weight:600;">1,240 sq ft</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border);">
-              <span style="color:var(--text-muted);">Purchase Price</span>
-              <span style="font-weight:600; color:var(--gold);">AED 1,850,000</span>
-            </div>
-            <div style="display:flex; justify-content:space-between; padding:10px 0;">
-              <span style="color:var(--text-muted);">Expected Handover</span>
-              <span style="font-weight:600; color:var(--gold);">December 2025</span>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-title">Construction Timeline</div>
-          <div style="display:flex; flex-direction:column; gap:14px;">
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✓</div>
-              <div>
-                <div style="font-size:13px; font-weight:600;">Foundation Complete</div>
-                <div style="font-size:11px; color:var(--text-muted);">Jan 2024</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <div style="width:24px;height:24px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">✓</div>
-              <div>
-                <div style="font-size:13px; font-weight:600;">Structural Work — Floor 1-15</div>
-                <div style="font-size:11px; color:var(--text-muted);">Jul 2024</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <div style="width:24px;height:24px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">⏳</div>
-              <div>
-                <div style="font-size:13px; font-weight:600;">Structural Work — Floor 16-30</div>
-                <div style="font-size:11px; color:var(--text-muted);">In Progress — Est. Aug 2025</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--text-muted);">○</div>
-              <div>
-                <div style="font-size:13px; font-weight:600; color:var(--text-muted);">Interior Finishing & MEP</div>
-                <div style="font-size:11px; color:var(--text-muted);">Est. Oct 2025</div>
-              </div>
-            </div>
-            <div style="display:flex; gap:12px; align-items:flex-start;">
-              <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--text-muted);">○</div>
-              <div>
-                <div style="font-size:13px; font-weight:600; color:var(--text-muted);">Handover</div>
-                <div style="font-size:11px; color:var(--text-muted);">Est. Dec 2025</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SETTINGS TAB -->
-    <div class="dash-tab-content" id="tab-settings">
-      <div class="topbar">
-        <div class="page-title">Account <span>Settings</span></div>
-      </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-title">Personal Information</div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>First Name</label>
-              <input type="text" id="settingFirst" placeholder="First Name" />
-            </div>
-            <div class="form-group">
-              <label>Last Name</label>
-              <input type="text" id="settingLast" placeholder="Last Name" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="settingEmail" placeholder="email@company.com" />
-          </div>
-          <div class="form-group">
-            <label>Phone (UAE)</label>
-            <input type="tel" placeholder="+971 50 000 0000" />
-          </div>
-          <button class="btn btn-gold">Save Changes</button>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Security</div>
-          <div class="form-group">
-            <label>Current Password</label>
-            <input type="password" placeholder="••••••••" />
-          </div>
-          <div class="form-group">
-            <label>New Password</label>
-            <input type="password" placeholder="Min. 8 characters" />
-          </div>
-          <div class="form-group">
-            <label>Confirm New Password</label>
-            <input type="password" placeholder="••••••••" />
-          </div>
-          <button class="btn btn-gold">Update Password</button>
-          <div style="margin-top:16px; padding:14px; background:var(--bg3); border-radius:8px; font-size:13px; color:var(--text-muted);">
-            🔐 Your password is encrypted using SHA-256 + salt. It is never stored in plain text.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- COMPANY PROFILE TAB -->
-    <div class="dash-tab-content" id="tab-profile">
+    <!-- ════════════════════════════════════════
+         TAB: COMPANY PROFILE
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-profile">
       <div class="topbar">
         <div class="page-title">Company <span>Profile</span></div>
         <a href="company-profile.html" class="btn btn-ghost">View Public Profile →</a>
@@ -1056,150 +834,819 @@
       <div class="grid-2">
         <div class="card">
           <div class="card-title">Company Information</div>
-          <div class="form-group"><label>Company Name</label><input type="text" placeholder="Al Fardan Construction LLC" /></div>
+          <div class="form-group"><label>Company Name</label><input type="text" id="cpName" placeholder="Al Fardan Construction LLC" /></div>
           <div class="form-row">
-            <div class="form-group"><label>Trade License No.</label><input type="text" placeholder="DM-CON-2008-447" /></div>
-            <div class="form-group"><label>Year Established</label><input type="number" placeholder="2008" /></div>
+            <div class="form-group"><label>Trade License No.</label><input type="text" id="cpLicense" placeholder="DM-CON-2008-447" /></div>
+            <div class="form-group"><label>Year Established</label><input type="number" id="cpYear" placeholder="2008" /></div>
           </div>
-          <div class="form-group"><label>Primary Speciality</label>
-            <select>
-              <option>Commercial Construction</option>
-              <option>Residential</option>
-              <option>Renovation & Fit-Out</option>
-              <option>Infrastructure</option>
-              <option>Interior Design</option>
-              <option>MEP Engineering</option>
+          <div class="form-group">
+            <label>Primary Speciality</label>
+            <select id="cpSpec">
+              <option>Commercial Construction</option><option>Residential</option>
+              <option>Renovation & Fit-Out</option><option>Infrastructure</option>
+              <option>Interior Design</option><option>MEP Engineering</option>
             </select>
           </div>
-          <div class="form-group"><label>Company Bio</label><textarea placeholder="Describe your company, expertise, and key differentiators..."></textarea></div>
-          <button class="btn btn-gold">Save Profile</button>
+          <div class="form-group"><label>Company Bio</label><textarea id="cpBio" placeholder="Describe your company, expertise, key differentiators..."></textarea></div>
+          <div class="form-group"><label>Website</label><input type="url" id="cpWeb" placeholder="https://yourcompany.com" /></div>
+          <div class="form-group"><label>Phone (UAE)</label><input type="tel" id="cpPhone" placeholder="+971 4 000 0000" /></div>
+          <div class="alert alert-success" id="cpSuccess">✓ Profile saved successfully.</div>
+          <button class="btn btn-gold" onclick="saveProfile()">Save Profile</button>
         </div>
-        <div class="card">
-          <div class="card-title">Verification Status</div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--bg3); border-radius:8px;">
-              <span style="font-size:14px;">📄 Trade License</span>
-              <span class="badge badge-green">Verified</span>
+        <div>
+          <div class="card">
+            <div class="card-title">Verification Status</div>
+            <div class="verif-item"><div class="verif-label"><span>📄</span> Trade License</div><span class="badge badge-green">✓ Verified</span></div>
+            <div class="verif-item"><div class="verif-label"><span>🏛️</span> RTA Registration</div><span class="badge badge-green">✓ Verified</span></div>
+            <div class="verif-item"><div class="verif-label"><span>📋</span> ISO Certification</div><span class="badge badge-gold">Upload Required</span></div>
+            <div class="verif-item"><div class="verif-label"><span>✅</span> Background Check</div><span class="badge badge-green">✓ Passed</span></div>
+            <div class="verif-item"><div class="verif-label"><span>🔐</span> DM Portal Access</div><span class="badge badge-blue">Pending Review</span></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Upload Verification Documents</div>
+            <div class="upload-zone">
+              <input type="file" id="verifFiles" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this,'verifList','verifItems')" />
+              <div class="uz-icon">🔏</div>
+              <p><strong>Trade License, ISO, DM Certificates</strong></p>
+              <p>PDF or JPG — required for RTA approval</p>
             </div>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--bg3); border-radius:8px;">
-              <span style="font-size:14px;">🏛️ Government Registration</span>
-              <span class="badge badge-green">Verified</span>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--bg3); border-radius:8px;">
-              <span style="font-size:14px;">📋 ISO Certification</span>
-              <span class="badge badge-gold">Pending Upload</span>
-            </div>
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--bg3); border-radius:8px;">
-              <span style="font-size:14px;">✅ Background Check</span>
-              <span class="badge badge-green">Passed</span>
-            </div>
+            <div class="file-list" id="verifList"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- COMPANIES TAB -->
-    <div class="dash-tab-content" id="tab-companies">
-      <div class="topbar">
-        <div class="page-title">Find <span>Companies</span></div>
+    <!-- ════════════════════════════════════════
+         TAB: SETTINGS
+    ════════════════════════════════════════ -->
+    <div class="dash-tab" id="tab-settings">
+      <div class="topbar"><div class="page-title">Account <span>Settings</span></div></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Personal Information</div>
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input type="text" id="setFirst" /></div>
+            <div class="form-group"><label>Last Name</label><input type="text" id="setLast" /></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" id="setEmail" /></div>
+          <div class="form-group"><label>Phone (UAE)</label><input type="tel" id="setPhone" placeholder="+971 50 000 0000" /></div>
+          <div class="alert alert-success" id="setSuccess">✓ Settings saved.</div>
+          <button class="btn btn-gold" onclick="saveSettings()">Save Changes</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Change Password</div>
+          <div class="form-group"><label>Current Password</label><input type="password" id="setCurPass" placeholder="••••••••" /></div>
+          <div class="form-group"><label>New Password (min 8 chars)</label><input type="password" id="setNewPass" placeholder="••••••••" /></div>
+          <div class="form-group"><label>Confirm New Password</label><input type="password" id="setConfPass" placeholder="••••••••" /></div>
+          <div class="alert alert-error" id="setPassError"></div>
+          <div class="alert alert-success" id="setPassSuccess">✓ Password updated.</div>
+          <button class="btn btn-gold" onclick="changePassword()">Update Password</button>
+          <div style="margin-top:16px;padding:12px;background:var(--bg3);border-radius:var(--r);font-size:12px;color:var(--text-muted);border:1px solid var(--border);">
+            🔐 Passwords are hashed with SHA-256 + salt. Never stored in plain text.
+          </div>
+        </div>
       </div>
-      <p style="color:var(--text-muted); margin-bottom:24px;">Browse and search our full verified contractor directory.</p>
-      <a href="index.html#companies" class="btn btn-gold">Open Company Directory →</a>
     </div>
 
   </main>
+</div><!-- /layout -->
+
+<!-- ══════════════════════════════════════════════
+     MODAL: E-SIGN DOCUMENT
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="esignModal">
+  <div class="modal-box" style="max-width:620px;">
+    <button class="modal-close" onclick="closeModal('esignModal')">✕</button>
+    <div class="modal-title">E-Sign Document</div>
+    <div class="modal-sub" id="esignDocName">Document Name</div>
+
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:18px;font-size:13px;">
+      <div style="font-weight:600;margin-bottom:8px;color:var(--text-sub);">Document Details</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;">
+        <div><span style="color:var(--text-muted);">Signatories: </span><span style="font-weight:600;">4 required</span></div>
+        <div><span style="color:var(--text-muted);">Signed: </span><span style="font-weight:600;color:var(--green);">3 of 4</span></div>
+        <div><span style="color:var(--text-muted);">Your role: </span><span style="font-weight:600;">Site Manager / Project Lead</span></div>
+      </div>
+    </div>
+
+    <div class="form-row" style="margin-bottom:14px;">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" id="esignFullName" placeholder="e.g. Omar Aliyev" />
+      </div>
+      <div class="form-group">
+        <label>Role / Title</label>
+        <input type="text" id="esignRole" placeholder="Site Manager" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Draw Your Signature Below *</label>
+      <div class="sign-pad-wrap">
+        <canvas id="signCanvas" width="548" height="140" style="background:var(--bg3);width:100%;"></canvas>
+      </div>
+      <div class="sign-tools">
+        <button class="btn btn-ghost btn-sm" onclick="clearSignature()">✕ Clear</button>
+        <span style="font-size:12px;color:var(--text-muted);align-self:center;margin-left:8px;">Draw in the box above with your mouse or finger</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Date of Signing</label>
+      <input type="date" id="esignDate" />
+    </div>
+
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:16px;font-size:12px;color:var(--text-muted);">
+      🔏 By clicking "Sign Document" you confirm this is your legally binding electronic signature in accordance with UAE Federal Law No. 1 of 2006 on Electronic Commerce & Transactions.
+    </div>
+
+    <div class="alert alert-error" id="esignError"></div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center;" onclick="closeModal('esignModal')">Cancel</button>
+      <button class="btn btn-gold" style="flex:2;justify-content:center;" onclick="submitEsign()">✍️ Sign Document</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL: UPLOAD DOCUMENT
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="uploadDocModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('uploadDocModal')">✕</button>
+    <div class="modal-title">Upload Document</div>
+    <div class="modal-sub">Add a document to your project library</div>
+    <div class="form-group">
+      <label>Document Name *</label>
+      <input type="text" id="udName" placeholder="e.g. Structural Inspection Act — Floor 14" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Document Type</label>
+        <select id="udType">
+          <option value="blueprint">Blueprint / Drawing</option>
+          <option value="certificate">Quality Certificate</option>
+          <option value="act">Inspection Act (AOCR)</option>
+          <option value="contract">Contract / Agreement</option>
+          <option value="approval">DM / RTA Approval</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Related Project</label>
+        <select id="udProject">
+          <option value="">— General / Not project-specific —</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Requires Signature?</label>
+      <select id="udNeedsSign">
+        <option value="yes">Yes — needs e-signature</option>
+        <option value="no">No — for reference only</option>
+      </select>
+    </div>
+    <div class="upload-zone" style="margin-bottom:16px;">
+      <input type="file" id="udFile" accept=".pdf,.jpg,.jpeg,.png,.docx,.dwg" onchange="udFileChosen(this)" />
+      <div class="uz-icon">📎</div>
+      <p><strong>Click to attach file</strong></p>
+      <p id="udFileName" style="color:var(--gold);">No file selected</p>
+    </div>
+    <div class="alert alert-success" id="udSuccess">✓ Document uploaded successfully.</div>
+    <button class="btn btn-gold btn-full" style="padding:12px;" onclick="uploadDocument()">Upload Document</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL: SIGN SUCCESS
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="signSuccessModal">
+  <div class="modal-box" style="max-width:420px;text-align:center;">
+    <div style="font-size:56px;margin-bottom:16px;">✅</div>
+    <div class="modal-title" style="text-align:center;">Document Signed</div>
+    <p style="color:var(--text-muted);margin-bottom:24px;">Your signature has been applied and recorded. The document has been timestamped and added to your verified records.</p>
+    <div style="background:var(--bg3);border-radius:var(--r);padding:12px;margin-bottom:20px;font-size:12px;font-family:monospace;color:var(--text-muted);text-align:left;word-break:break-all;" id="signHashDisplay"></div>
+    <button class="btn btn-gold btn-full" style="padding:12px;" onclick="closeModal('signSuccessModal')">Done</button>
+  </div>
 </div>
 
 <script>
-  // ── Tab System ──
-  function goTracker(pid) {
-    sessionStorage.setItem('viewingProject', pid);
-    window.location.href = 'project.html?id=' + pid;
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const DB_KEY = 'chiaro_data';
+let state = JSON.parse(localStorage.getItem(DB_KEY) || '{}');
+state.projects = state.projects || [];
+state.documents = state.documents || [];
+state.requests = state.requests || [];
+
+function save() { localStorage.setItem(DB_KEY, JSON.stringify(state)); }
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function nav(el) {
+  if (!el || !el.dataset.tab) return;
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  const tab = document.getElementById('tab-' + el.dataset.tab);
+  if (tab) tab.classList.add('active');
+  el.classList.add('active');
+  renderAll();
+}
+
+// ══════════════════════════════════════════════
+// SESSION
+// ══════════════════════════════════════════════
+const sess = (() => {
+  const s = sessionStorage.getItem('bnaiq_session') || sessionStorage.getItem('chiaro_session');
+  try { return s ? JSON.parse(s) : null; } catch(e) { return null; }
+})();
+
+if (!sess) { window.location.href = '../index.html'; }
+else {
+  document.getElementById('greetName').textContent = sess.name || 'User';
+  document.getElementById('userName').textContent = (sess.name || '') + ' ' + (sess.lastName || '');
+  document.getElementById('userType').textContent = sess.type === 'company' ? 'Company Account' : 'Client Account';
+  document.getElementById('userInitial').textContent = (sess.name || 'U')[0].toUpperCase();
+  // pre-fill settings
+  document.getElementById('setFirst').value = sess.name || '';
+  document.getElementById('setEmail').value = sess.email || '';
+  // set today's date for signing
+  document.getElementById('esignDate').value = new Date().toISOString().split('T')[0];
+}
+
+function handleLogout() {
+  sessionStorage.removeItem('bnaiq_session');
+  sessionStorage.removeItem('chiaro_session');
+  window.location.href = '../index.html';
+}
+
+// ══════════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════════
+function renderAll() {
+  renderOverview();
+  renderProjectsTab();
+  renderDocStats();
+  populateProjectDropdown();
+}
+
+// ══════════════════════════════════════════════
+// OVERVIEW
+// ══════════════════════════════════════════════
+function renderOverview() {
+  const projs = state.projects;
+  document.getElementById('ovTotalProj').textContent = projs.length;
+  document.getElementById('ovActiveProj').textContent = projs.filter(p => p.status === 'active').length;
+  document.getElementById('ovDocs').textContent = state.documents.length;
+
+  const ovList = document.getElementById('ovProjectList');
+  if (!projs.length) {
+    ovList.innerHTML = `<div style="text-align:center;padding:28px 0;color:var(--text-muted);font-size:14px;">No projects yet — <button class="btn btn-ghost btn-sm" onclick="nav(document.querySelector('[data-tab=upload]'))" style="display:inline-flex">Add your first project →</button></div>`;
+    return;
   }
+  ovList.innerHTML = projs.slice(-4).reverse().map(p => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:24px;">${p.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600;">${p.name}</div>
+        <div style="font-size:12px;color:var(--text-muted);">${p.location} · ${p.type}</div>
+        <div style="margin-top:5px;"><div class="prog-wrap"><div class="prog-fill${p.status==='complete'?' green':''}" style="width:${p.progress}%"></div></div><span style="font-size:11px;color:var(--text-muted);margin-left:8px;">${p.progress}%</span></div>
+      </div>
+      <span class="badge badge-${p.status==='complete'?'green':p.status==='active'?'gold':'muted'}">${p.status}</span>
+    </div>
+  `).join('');
+}
 
-  function showTab(tabId, clickedEl) {
-    document.querySelectorAll('.dash-tab-content').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + tabId)?.classList.add('active');
+// ══════════════════════════════════════════════
+// PROJECTS TAB
+// ══════════════════════════════════════════════
+function renderProjectsTab() {
+  const projs = state.projects;
+  // stats
+  document.getElementById('psTot').textContent = projs.length;
+  document.getElementById('psAct').textContent = projs.filter(p => p.status === 'active').length;
+  document.getElementById('psComp').textContent = projs.filter(p => p.status === 'complete').length;
+  const totalVal = projs.reduce((s,p) => s + (parseFloat(p.value) || 0), 0);
+  document.getElementById('psVal').textContent = totalVal > 0 ? formatAED(totalVal) : 'AED 0';
 
-    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-    if (clickedEl) clickedEl.classList.add('active');
+  const wrap = document.getElementById('projectsTableWrap');
+  if (!projs.length) {
+    wrap.innerHTML = `<div style="text-align:center;padding:60px 0;color:var(--text-muted);"><div style="font-size:40px;margin-bottom:14px;opacity:0.4">🏗️</div><div style="font-size:16px;font-weight:600;color:var(--text-sub);margin-bottom:8px;">No projects yet</div><div style="margin-bottom:20px;">Create your first project to start tracking progress.</div><button class="btn btn-gold" onclick="nav(document.querySelector('[data-tab=upload]'))">+ Create First Project</button></div>`;
+    return;
   }
+  wrap.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Project Name</th><th>Type</th><th>Value</th><th>Location</th><th>Progress</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${projs.map((p,i) => `
+            <tr class="clickable" onclick="goTracker(${i})">
+              <td><span style="font-size:22px;">${p.emoji}</span></td>
+              <td><strong>${p.name}</strong><div style="font-size:11px;color:var(--text-muted);">${p.client ? p.client : ''}</div></td>
+              <td>${p.type}</td>
+              <td>${p.value ? formatAED(parseFloat(p.value)) : '—'}</td>
+              <td>${p.location}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="prog-wrap"><div class="prog-fill${p.status==='complete'?' green':''}" style="width:${p.progress}%"></div></div>
+                  <span style="font-size:12px;color:var(--text-muted);">${p.progress}%</span>
+                </div>
+              </td>
+              <td><span class="badge badge-${p.status==='complete'?'green':p.status==='active'?'gold':'muted'}">${p.status}</span></td>
+              <td>
+                <div style="display:flex;gap:6px;">
+                  <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editProject(${i})">Edit</button>
+                  <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteProject(${i})">Delete</button>
+                </div>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
 
-  // ── 2% Deduction Calculator ──
-  function calculateDeduction() {
-    const input = document.getElementById('contractValue');
-    const display = document.getElementById('deductionDisplay');
-    const raw = input.value.replace(/[^0-9.]/g, '');
-    const value = parseFloat(raw);
+function goTracker(idx) {
+  const p = state.projects[idx];
+  if (!p) return;
+  sessionStorage.setItem('viewingProject', 'custom_' + idx);
+  sessionStorage.setItem('customProject', JSON.stringify(p));
+  window.location.href = 'project-tracker.html?custom=1&idx=' + idx;
+}
 
-    if (!value || value <= 0) {
-      display.style.display = 'none';
-      return;
-    }
+function deleteProject(idx) {
+  if (!confirm('Delete this project? This cannot be undone.')) return;
+  state.projects.splice(idx, 1);
+  save();
+  renderAll();
+}
 
-    const deduction = value * 0.02;
-    const net = value - deduction;
+function editProject(idx) {
+  const p = state.projects[idx];
+  // populate the add form
+  document.getElementById('pName').value = p.name || '';
+  document.getElementById('pType').value = p.type || '';
+  document.getElementById('pStatus').value = p.status || 'active';
+  document.getElementById('pLocation').value = p.location || '';
+  document.getElementById('pStart').value = p.start || '';
+  document.getElementById('pEnd').value = p.end || '';
+  document.getElementById('pClient').value = p.client || '';
+  document.getElementById('pFloors').value = p.floors || 0;
+  document.getElementById('pFloorsComp').value = p.floorsComp || 0;
+  document.getElementById('pProgress').value = p.progress || 0;
+  document.getElementById('pValue').value = p.value || '';
+  document.getElementById('pDesc').value = p.desc || '';
+  document.getElementById('pVisibility').value = p.visibility || 'public';
+  document.getElementById('pEmoji').value = p.emoji || '🏗️';
+  recalcFee();
+  // mark as editing
+  window._editingProjectIdx = idx;
+  nav(document.querySelector('[data-tab=upload]'));
+}
 
-    function formatAED(n) {
-      return 'AED ' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
+// ══════════════════════════════════════════════
+// ADD PROJECT STEPS
+// ══════════════════════════════════════════════
+let _blueprintFiles = [];
+let _certFiles = [];
 
-    document.getElementById('dispContractVal').textContent = formatAED(value);
-    document.getElementById('dispDeduction').textContent = '- ' + formatAED(deduction);
-    document.getElementById('dispNetVal').textContent = formatAED(net);
-    display.style.display = 'block';
-  }
+function addProjNext1() {
+  const name = document.getElementById('pName').value.trim();
+  const type = document.getElementById('pType').value;
+  const loc = document.getElementById('pLocation').value.trim();
+  const val = document.getElementById('pValue').value;
+  if (!name || !type || !loc) return alert('Please fill in Project Name, Type, and Location.');
+  if (!val) return alert('Please enter a Contract Value.');
+  // advance
+  document.getElementById('addProjStep1').style.display = 'none';
+  document.getElementById('addProjStep2').style.display = 'block';
+  document.getElementById('addStep1').className = 'step-num done'; document.getElementById('addStep1').textContent = '✓';
+  document.getElementById('addStep2').className = 'step-num active';
+}
 
-  // ── Role-Based Sidebar Visibility ──
-  function setupRoleBasedNav(userType) {
-    // Hide all role-specific nav sections first
-    document.getElementById('companyLabel').style.display = 'none';
-    document.getElementById('companyNav').style.display = 'none';
-    document.getElementById('investorLabel').style.display = 'none';
-    document.getElementById('investorNav').style.display = 'none';
-    document.getElementById('clientLabel').style.display = 'none';
-    document.getElementById('clientNav').style.display = 'none';
+function addProjBack1() {
+  document.getElementById('addProjStep2').style.display = 'none';
+  document.getElementById('addProjStep1').style.display = 'block';
+  document.getElementById('addStep2').className = 'step-num'; document.getElementById('addStep2').textContent = '2';
+  document.getElementById('addStep1').className = 'step-num active'; document.getElementById('addStep1').textContent = '1';
+}
 
-    if (userType === 'company') {
-      document.getElementById('companyLabel').style.display = '';
-      document.getElementById('companyNav').style.display = '';
-    } else if (userType === 'investor') {
-      document.getElementById('investorLabel').style.display = '';
-      document.getElementById('investorNav').style.display = '';
-    } else if (userType === 'client') {
-      document.getElementById('clientLabel').style.display = '';
-      document.getElementById('clientNav').style.display = '';
-    } else if (userType === 'government') {
-      // Government sees everything
-      document.getElementById('companyLabel').style.display = '';
-      document.getElementById('companyNav').style.display = '';
-      document.getElementById('investorLabel').style.display = '';
-      document.getElementById('investorNav').style.display = '';
-      document.getElementById('clientLabel').style.display = '';
-      document.getElementById('clientNav').style.display = '';
-    }
-  }
+function addProjNext2() {
+  document.getElementById('addProjStep2').style.display = 'none';
+  document.getElementById('addProjStep3').style.display = 'block';
+  document.getElementById('addStep2').className = 'step-num done'; document.getElementById('addStep2').textContent = '✓';
+  document.getElementById('addStep3').className = 'step-num active';
+  // build review
+  const val = parseFloat(document.getElementById('pValue').value) || 0;
+  const fee = val * 0.002;
+  document.getElementById('projReviewContent').innerHTML = `
+    <div class="info-rows">
+      <div class="info-row"><span class="info-lbl">Project Name</span><span class="info-val">${document.getElementById('pName').value}</span></div>
+      <div class="info-row"><span class="info-lbl">Type</span><span class="info-val">${document.getElementById('pType').value}</span></div>
+      <div class="info-row"><span class="info-lbl">Location</span><span class="info-val">${document.getElementById('pLocation').value}</span></div>
+      <div class="info-row"><span class="info-lbl">Status</span><span class="info-val">${document.getElementById('pStatus').value}</span></div>
+      <div class="info-row"><span class="info-lbl">Progress</span><span class="info-val">${document.getElementById('pProgress').value}%</span></div>
+      <div class="info-row"><span class="info-lbl">Floors Total / Done</span><span class="info-val">${document.getElementById('pFloors').value} / ${document.getElementById('pFloorsComp').value}</span></div>
+      <div class="info-row"><span class="info-lbl">Contract Value</span><span class="info-val">${formatAED(val)}</span></div>
+      <div class="info-row"><span class="info-lbl" style="color:var(--red)">Platform Fee (0.2%)</span><span class="info-val" style="color:var(--red)">−${formatAED(fee)}</span></div>
+      <div class="info-row"><span class="info-lbl"><strong>Net Value</strong></span><span class="info-val"><strong style="color:var(--gold)">${formatAED(val - fee)}</strong></span></div>
+      <div class="info-row"><span class="info-lbl">Blueprints Uploaded</span><span class="info-val">${_blueprintFiles.length} file(s)</span></div>
+      <div class="info-row"><span class="info-lbl">Certificates Uploaded</span><span class="info-val">${_certFiles.length} file(s)</span></div>
+      <div class="info-row"><span class="info-lbl">Visibility</span><span class="info-val">${document.getElementById('pVisibility').value}</span></div>
+    </div>
+  `;
+}
 
-  // ── Session Check ──
-  const session = sessionStorage.getItem('bnaiq_session');
-  if (!session) {
-    window.location.href = 'index.html';
+function addProjBack2() {
+  document.getElementById('addProjStep3').style.display = 'none';
+  document.getElementById('addProjStep2').style.display = 'block';
+  document.getElementById('addStep3').className = 'step-num'; document.getElementById('addStep3').textContent = '3';
+  document.getElementById('addStep2').className = 'step-num active'; document.getElementById('addStep2').textContent = '2';
+}
+
+function publishProject() {
+  const val = parseFloat(document.getElementById('pValue').value) || 0;
+  const fee = val * 0.002;
+  const proj = {
+    name: document.getElementById('pName').value.trim(),
+    type: document.getElementById('pType').value,
+    status: document.getElementById('pStatus').value,
+    location: document.getElementById('pLocation').value.trim(),
+    start: document.getElementById('pStart').value,
+    end: document.getElementById('pEnd').value,
+    client: document.getElementById('pClient').value.trim(),
+    floors: parseInt(document.getElementById('pFloors').value) || 0,
+    floorsComp: parseInt(document.getElementById('pFloorsComp').value) || 0,
+    progress: parseInt(document.getElementById('pProgress').value) || 0,
+    value: val,
+    fee: fee,
+    netValue: val - fee,
+    desc: document.getElementById('pDesc').value.trim(),
+    visibility: document.getElementById('pVisibility').value,
+    emoji: document.getElementById('pEmoji').value,
+    blueprints: _blueprintFiles.map(f => f.name),
+    certs: _certFiles.map(f => f.name),
+    createdAt: new Date().toISOString(),
+    id: 'proj_' + Date.now()
+  };
+
+  const editIdx = window._editingProjectIdx;
+  if (editIdx !== undefined && editIdx >= 0) {
+    state.projects[editIdx] = proj;
+    window._editingProjectIdx = undefined;
   } else {
-    const s = JSON.parse(session);
-    document.getElementById('greetName').textContent = s.name || 'User';
-    document.getElementById('userName').textContent = s.name + ' ' + (s.lastName || '');
-    const typeLabels = { company: 'Company Account', investor: 'Investor Account', government: 'Government Account', client: 'Client Account' };
-    document.getElementById('userType').textContent = typeLabels[s.type] || 'Account';
-    document.getElementById('userInitial').textContent = (s.name || 'U')[0].toUpperCase();
-    document.getElementById('settingFirst').value = s.name || '';
-    document.getElementById('settingEmail').value = s.email || '';
-    setupRoleBasedNav(s.type);
+    state.projects.push(proj);
+  }
+  save();
+
+  // reset form
+  resetAddForm();
+  alert('✓ Project published successfully! Platform fee of 0.2% (' + formatAED(fee) + ') will be deducted from your first invoice.');
+  nav(document.querySelector('[data-tab=projects]'));
+}
+
+function resetAddForm() {
+  ['pName','pLocation','pClient','pDesc','pValue'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  ['pType','pStatus','pVisibility','pEmoji'].forEach(id => { const el = document.getElementById(id); if(el) el.selectedIndex = 0; });
+  ['pFloors','pFloorsComp','pProgress'].forEach(id => { const el = document.getElementById(id); if(el) el.value = '0'; });
+  ['pStart','pEnd'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  _blueprintFiles = []; _certFiles = [];
+  document.getElementById('blueprintList').innerHTML = '';
+  document.getElementById('certList').innerHTML = '';
+  document.getElementById('feeBox').style.display = 'none';
+  // reset steps
+  document.getElementById('addProjStep1').style.display = 'block';
+  document.getElementById('addProjStep2').style.display = 'none';
+  document.getElementById('addProjStep3').style.display = 'none';
+  document.getElementById('addStep1').className = 'step-num active'; document.getElementById('addStep1').textContent = '1';
+  document.getElementById('addStep2').className = 'step-num'; document.getElementById('addStep2').textContent = '2';
+  document.getElementById('addStep3').className = 'step-num'; document.getElementById('addStep3').textContent = '3';
+}
+
+// ══════════════════════════════════════════════
+// FEE CALCULATOR
+// ══════════════════════════════════════════════
+function recalcFee() {
+  const val = parseFloat(document.getElementById('pValue').value) || 0;
+  const box = document.getElementById('feeBox');
+  if (val <= 0) { box.style.display = 'none'; return; }
+  const fee = val * 0.002;
+  box.style.display = 'block';
+  document.getElementById('feeContractVal').textContent = formatAED(val);
+  document.getElementById('feePlatformFee').textContent = '− ' + formatAED(fee);
+  document.getElementById('feeNetVal').textContent = formatAED(val - fee);
+}
+
+function formatAED(n) {
+  if (n >= 1e9) return 'AED ' + (n/1e9).toFixed(2) + 'B';
+  if (n >= 1e6) return 'AED ' + (n/1e6).toFixed(2) + 'M';
+  if (n >= 1e3) return 'AED ' + Math.round(n).toLocaleString();
+  return 'AED ' + n.toFixed(0);
+}
+
+// ══════════════════════════════════════════════
+// FILE UPLOAD HANDLING
+// ══════════════════════════════════════════════
+function handleFileSelect(input, listId, storeKey) {
+  const list = document.getElementById(listId);
+  const files = Array.from(input.files);
+  if (!files.length) return;
+
+  if (storeKey === 'blueprintItems') _blueprintFiles.push(...files);
+  if (storeKey === 'certItems') _certFiles.push(...files);
+
+  files.forEach(f => {
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `
+      <span class="file-icon">${getFileIcon(f.name)}</span>
+      <div style="flex:1">
+        <div class="file-name">${f.name}</div>
+        <div class="file-size">${(f.size/1024/1024).toFixed(2)} MB</div>
+      </div>
+      <span class="file-status"><span style="color:var(--green)">✓ Ready</span></span>
+      <button class="file-remove" onclick="this.closest('.file-item').remove()">×</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return '📄';
+  if (['jpg','jpeg','png','gif'].includes(ext)) return '🖼️';
+  if (['doc','docx'].includes(ext)) return '📝';
+  if (ext === 'dwg') return '📐';
+  return '📎';
+}
+
+function udFileChosen(input) {
+  const f = input.files[0];
+  document.getElementById('udFileName').textContent = f ? f.name : 'No file selected';
+}
+
+// ══════════════════════════════════════════════
+// DOCUMENTS
+// ══════════════════════════════════════════════
+let _currentDocFilter = 'all';
+
+function renderDocStats() {
+  document.getElementById('docTotalCount').textContent = state.documents.length;
+  document.getElementById('docSignedCount').textContent = state.documents.filter(d => d.signed).length;
+  renderDocLibrary();
+}
+
+function renderDocLibrary() {
+  const lib = document.getElementById('docLibrary');
+  let docs = state.documents;
+  if (_currentDocFilter !== 'all') docs = docs.filter(d => d.docType === _currentDocFilter);
+  if (!docs.length) {
+    lib.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;"><div style="font-size:36px;margin-bottom:12px;opacity:0.4">📁</div>No documents here yet.</div>`;
+    return;
+  }
+  lib.innerHTML = docs.map((d,i) => `
+    <div class="doc-row">
+      <div class="doc-icon">${getFileIcon(d.fileName || d.name + '.pdf')}</div>
+      <div class="doc-info">
+        <div class="doc-name">${d.name}</div>
+        <div class="doc-meta">${d.docType} · Uploaded ${new Date(d.uploadedAt).toLocaleDateString('en-GB')} ${d.project ? '· ' + d.project : ''}</div>
+      </div>
+      <div class="doc-actions">
+        ${d.signed ? '<span class="badge badge-green">✓ Signed</span>' : (d.needsSign === 'yes' ? '<span class="badge badge-red">Needs Signature</span>' : '<span class="badge badge-muted">Reference</span>')}
+        ${d.needsSign === 'yes' && !d.signed ? `<button class="btn btn-gold btn-sm" onclick="openEsignModal('${d.name}', ${i})">Sign</button>` : ''}
+        <button class="btn btn-ghost btn-sm" onclick="viewDoc('${d.name}')">View</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDoc(${i})">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterDocs(type, el) {
+  _currentDocFilter = type;
+  document.querySelectorAll('.active-filter').forEach(b => { b.classList.remove('active-filter'); b.className = b.className.replace(' btn-gold','').replace(' btn-ghost btn-sm','') + ' btn-ghost btn-sm'; });
+  el.className = el.className + ' active-filter';
+  renderDocLibrary();
+}
+
+function deleteDoc(idx) {
+  if (!confirm('Delete this document?')) return;
+  state.documents.splice(idx, 1);
+  save(); renderDocStats();
+}
+
+function viewDoc(name) {
+  alert('📄 Opening: ' + name + '\n\nIn production this would open the document viewer or download the file.');
+}
+
+function openUploadDocModal() {
+  populateProjectDropdown();
+  closeAlert('udSuccess');
+  document.getElementById('uploadDocModal').classList.add('open');
+}
+
+function uploadDocument() {
+  const name = document.getElementById('udName').value.trim();
+  if (!name) return alert('Please enter a document name.');
+  const fileInput = document.getElementById('udFile');
+  const doc = {
+    name,
+    docType: document.getElementById('udType').value,
+    project: document.getElementById('udProject').value,
+    needsSign: document.getElementById('udNeedsSign').value,
+    fileName: fileInput.files[0] ? fileInput.files[0].name : name + '.pdf',
+    signed: false,
+    uploadedAt: new Date().toISOString(),
+    id: 'doc_' + Date.now()
+  };
+  state.documents.push(doc);
+  save();
+  showAlert('udSuccess');
+  setTimeout(() => { closeModal('uploadDocModal'); renderDocStats(); }, 1200);
+}
+
+function populateProjectDropdown() {
+  const sel = document.getElementById('udProject');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">— General / Not project-specific —</option>' +
+    state.projects.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// E-SIGN
+// ══════════════════════════════════════════════
+let _signCtx, _isDrawing = false, _signingDocIdx = -1;
+let _currentSignDocName = '';
+
+function openEsignModal(docName, docIdx) {
+  _currentSignDocName = docName;
+  _signingDocIdx = docIdx !== undefined ? docIdx : -1;
+  document.getElementById('esignDocName').textContent = docName;
+  document.getElementById('esignFullName').value = sess ? (sess.name + ' ' + (sess.lastName || '')) : '';
+  closeAlert('esignError');
+  document.getElementById('esignModal').classList.add('open');
+  setTimeout(initSignCanvas, 100);
+}
+
+function initSignCanvas() {
+  const canvas = document.getElementById('signCanvas');
+  const wrap = canvas.parentElement;
+  canvas.width = wrap.clientWidth - 2;
+  canvas.height = 140;
+  _signCtx = canvas.getContext('2d');
+  _signCtx.strokeStyle = '#C9A84C';
+  _signCtx.lineWidth = 2.5;
+  _signCtx.lineCap = 'round';
+  _signCtx.lineJoin = 'round';
+
+  canvas.onmousedown = e => { _isDrawing = true; _signCtx.beginPath(); _signCtx.moveTo(...getPos(e, canvas)); };
+  canvas.onmousemove = e => { if (!_isDrawing) return; _signCtx.lineTo(...getPos(e, canvas)); _signCtx.stroke(); };
+  canvas.onmouseup = canvas.onmouseleave = () => { _isDrawing = false; };
+  canvas.ontouchstart = e => { e.preventDefault(); _isDrawing = true; const t = e.touches[0]; _signCtx.beginPath(); _signCtx.moveTo(...getPos(t, canvas)); };
+  canvas.ontouchmove = e => { e.preventDefault(); if (!_isDrawing) return; const t = e.touches[0]; _signCtx.lineTo(...getPos(t, canvas)); _signCtx.stroke(); };
+  canvas.ontouchend = () => { _isDrawing = false; };
+}
+
+function getPos(e, canvas) {
+  const r = canvas.getBoundingClientRect();
+  return [e.clientX - r.left, e.clientY - r.top];
+}
+
+function clearSignature() {
+  if (_signCtx) _signCtx.clearRect(0, 0, document.getElementById('signCanvas').width, 140);
+}
+
+async function submitEsign() {
+  const name = document.getElementById('esignFullName').value.trim();
+  const canvas = document.getElementById('signCanvas');
+  if (!name) { showAlert('esignError', 'Please enter your full name.'); return; }
+  // check canvas is not blank
+  const imgData = _signCtx.getImageData(0, 0, canvas.width, canvas.height);
+  const hasDrawing = imgData.data.some(v => v !== 0);
+  if (!hasDrawing) { showAlert('esignError', 'Please draw your signature above.'); return; }
+
+  const signData = canvas.toDataURL();
+  const timestamp = new Date().toISOString();
+  const hash = await sha256(`${name}|${_currentSignDocName}|${timestamp}|${signData.slice(0,50)}`);
+
+  // update document if it's from our library
+  if (_signingDocIdx >= 0 && state.documents[_signingDocIdx]) {
+    state.documents[_signingDocIdx].signed = true;
+    state.documents[_signingDocIdx].signedBy = name;
+    state.documents[_signingDocIdx].signedAt = timestamp;
+    state.documents[_signingDocIdx].signHash = hash;
+    save();
   }
 
-  function handleLogout() {
-    sessionStorage.removeItem('bnaiq_session');
-    window.location.href = 'index.html';
+  closeModal('esignModal');
+  document.getElementById('signHashDisplay').textContent = 'Verification Hash: ' + hash;
+  document.getElementById('signSuccessModal').classList.add('open');
+  renderDocStats();
+}
+
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('').slice(0, 40) + '...';
+}
+
+// ══════════════════════════════════════════════
+// REQUESTS
+// ══════════════════════════════════════════════
+function submitRequest() {
+  const desc = document.getElementById('rqDesc').value.trim();
+  if (!desc) return alert('Please describe your project.');
+  showAlert('rqSuccess');
+  setTimeout(() => closeAlert('rqSuccess'), 4000);
+}
+
+// ══════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════
+function saveProfile() {
+  state.profile = {
+    name: document.getElementById('cpName').value,
+    license: document.getElementById('cpLicense').value,
+    year: document.getElementById('cpYear').value,
+    spec: document.getElementById('cpSpec').value,
+    bio: document.getElementById('cpBio').value,
+    web: document.getElementById('cpWeb').value,
+    phone: document.getElementById('cpPhone').value,
+  };
+  save();
+  showAlert('cpSuccess');
+  setTimeout(() => closeAlert('cpSuccess'), 3000);
+}
+
+// Load saved profile
+if (state.profile) {
+  Object.keys(state.profile).forEach(k => {
+    const map = { name:'cpName', license:'cpLicense', year:'cpYear', spec:'cpSpec', bio:'cpBio', web:'cpWeb', phone:'cpPhone' };
+    const el = document.getElementById(map[k]);
+    if (el) el.value = state.profile[k] || '';
+  });
+}
+
+// ══════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════
+async function saveSettings() {
+  if (sess) {
+    sess.name = document.getElementById('setFirst').value.trim();
+    sess.lastName = document.getElementById('setLast').value.trim();
+    sess.email = document.getElementById('setEmail').value.trim();
+    sessionStorage.setItem('bnaiq_session', JSON.stringify(sess));
+    document.getElementById('userName').textContent = sess.name + ' ' + (sess.lastName || '');
+    document.getElementById('greetName').textContent = sess.name;
+    document.getElementById('userInitial').textContent = (sess.name || 'U')[0].toUpperCase();
   }
+  showAlert('setSuccess');
+  setTimeout(() => closeAlert('setSuccess'), 3000);
+}
+
+async function changePassword() {
+  const cur = document.getElementById('setCurPass').value;
+  const nw = document.getElementById('setNewPass').value;
+  const conf = document.getElementById('setConfPass').value;
+  closeAlert('setPassError'); closeAlert('setPassSuccess');
+  if (!cur || !nw || !conf) { showAlert('setPassError', 'Please fill all password fields.'); return; }
+  if (nw.length < 8) { showAlert('setPassError', 'New password must be at least 8 characters.'); return; }
+  if (nw !== conf) { showAlert('setPassError', 'New passwords do not match.'); return; }
+  showAlert('setPassSuccess');
+  document.getElementById('setCurPass').value = '';
+  document.getElementById('setNewPass').value = '';
+  document.getElementById('setConfPass').value = '';
+  setTimeout(() => closeAlert('setPassSuccess'), 3000);
+}
+
+// ══════════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════════
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ══════════════════════════════════════════════
+// ALERTS
+// ══════════════════════════════════════════════
+function showAlert(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (msg) el.textContent = msg;
+  el.classList.add('show');
+}
+function closeAlert(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+renderAll();
 </script>
 </body>
 </html>
